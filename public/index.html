@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototypes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e5e5e5; min-height: 100vh; padding: 3rem 2rem; }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+    p.subtitle { color: #888; margin-bottom: 3rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s; text-decoration: none; color: inherit; display: block; }
+    .card:hover { border-color: #666; }
+    .card h2 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #e5e5e5; }
+    .card p { color: #888; font-size: 0.9rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <h1>Prototypes</h1>
+  <p class="subtitle">AI-generated product demos</p>
+  <div class="grid">
+    <a class="card" href="/payment-assigner/">
+      <h2>Payment Assigner</h2>
+      <p>Payment assignment and management tool with audit logging.</p>
+    </a>
+    <a class="card" href="/promo-codes/">
+      <h2>Promo Codes</h2>
+      <p>Promo code management with admin dashboard and checkout integration.</p>
+    </a>
+  </div>
+</body>
+</html>
