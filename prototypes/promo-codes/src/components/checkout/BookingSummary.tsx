@@ -19,7 +19,7 @@ export default function BookingSummary({
   appliedPromo,
   promoCode,
 }: Props) {
-  // 1. Gross subtotal (base rate × nights, before any discounts)
+  // 1. Gross subtotal (base rate x nights, before any discounts)
   const grossSubtotal = nights * baseNightlyRate;
 
   // 2. kasa.com discount (applied per-night then multiplied, so card prices match)
@@ -32,16 +32,22 @@ export default function BookingSummary({
   const afterKasa = grossSubtotal - kasaAmount;
 
   // 3. Promo code discount (applied to post-kasa amount)
+  // Use calculated_discount from server when available, otherwise compute locally
   let promoDiscount = 0;
   let promoLabel = "";
   if (appliedPromo?.valid) {
-    if (appliedPromo.discount_type === "PERCENTAGE") {
+    if (appliedPromo.calculated_discount != null) {
+      promoDiscount = appliedPromo.calculated_discount;
+    } else if (appliedPromo.discount_type === "percentage") {
       promoDiscount = afterKasa * (appliedPromo.discount_value! / 100);
-      promoLabel = `${appliedPromo.discount_value}% off`;
     } else {
       promoDiscount = Math.min(appliedPromo.discount_value!, afterKasa);
-      promoLabel = `$${appliedPromo.discount_value?.toFixed(2)} off`;
     }
+
+    promoLabel =
+      appliedPromo.discount_type === "percentage"
+        ? `${appliedPromo.discount_value}% off`
+        : `$${appliedPromo.discount_value?.toFixed(2)} off`;
   }
 
   const afterAllDiscounts = afterKasa - promoDiscount;
@@ -69,7 +75,7 @@ export default function BookingSummary({
 
   return (
     <Box>
-      {/* Nightly rate × nights */}
+      {/* Nightly rate x nights */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
         <Typography variant="body2" color="text.secondary">
           ${baseNightlyRate.toFixed(0)} &times; {nights} night
@@ -106,7 +112,7 @@ export default function BookingSummary({
             fontWeight={500}
             sx={{ fontSize: "0.8rem" }}
           >
-            {promoCode.toUpperCase()} ({promoLabel})
+            Promo: {promoCode.toUpperCase()} ({promoLabel})
           </Typography>
           <Typography variant="body2" color="success.main" fontWeight={500}>
             &minus;${promoDiscount.toFixed(2)}

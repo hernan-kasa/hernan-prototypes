@@ -6,8 +6,12 @@ import {
   Chip,
   Divider,
   Drawer,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -23,52 +27,20 @@ import api from "../../api/client";
 import { usePromoCodes, useRatePlans } from "../../hooks/usePromoCodes";
 import type { PromoCode, RatePlanPromoPolicy } from "../../types";
 
-const ALL_COUPONS_VALUE = "__ALL_COUPONS__";
+type PolicyMode = "all" | "none" | "allowlist" | "blocklist";
 
-interface AutocompleteOption {
+interface CodeOption {
   label: string;
-  value: string;
-  group: string;
+  value: string; // promo code ID
 }
 
-function buildOptions(codes: PromoCode[]): AutocompleteOption[] {
-  return [
-    {
-      label: "All current and future promo codes",
-      value: ALL_COUPONS_VALUE,
-      group: "Apply universally",
-    },
-    ...codes
-      .filter((c) => c.is_active)
-      .map((c) => ({
-        label: `${c.code} — ${c.name}`,
-        value: c.code,
-        group: "Apply individually",
-      })),
-  ];
-}
-
-function policyToSelected(
-  policy: RatePlanPromoPolicy | null,
-  allOptions: AutocompleteOption[]
-): AutocompleteOption[] {
-  if (!policy) return [];
-  if (policy.disallow_all_promo_codes) {
-    return allOptions.filter((o) => o.value === ALL_COUPONS_VALUE);
-  }
-  return allOptions.filter((o) =>
-    policy.promo_codes_to_disallow.includes(o.value)
-  );
-}
-
-function selectedToPayload(selected: AutocompleteOption[]) {
-  const isAll = selected.some((o) => o.value === ALL_COUPONS_VALUE);
-  return {
-    disallow_all_promo_codes: isAll,
-    promo_codes_to_disallow: isAll
-      ? []
-      : selected.map((o) => o.value),
-  };
+function buildCodeOptions(codes: PromoCode[]): CodeOption[] {
+  return codes
+    .filter((c) => c.status === "active")
+    .map((c) => ({
+      label: `${c.code} \u2014 ${c.name}`,
+      value: c.id,
+    }));
 }
 
 /** Summary chip for the table row */
@@ -77,7 +49,7 @@ function PolicySummary({
 }: {
   policy: RatePlanPromoPolicy | null | undefined;
 }) {
-  if (!policy) {
+  if (!policy || policy.promo_code_policy === "all") {
     return (
       <Chip
         label="All allowed"
@@ -91,10 +63,10 @@ function PolicySummary({
       />
     );
   }
-  if (policy.disallow_all_promo_codes) {
+  if (policy.promo_code_policy === "none") {
     return (
       <Chip
-        label="All excluded"
+        label="All blocked"
         size="small"
         sx={{
           bgcolor: "error.50",
@@ -105,27 +77,28 @@ function PolicySummary({
       />
     );
   }
-  if (policy.promo_codes_to_disallow.length > 0) {
+  if (policy.promo_code_policy === "allowlist") {
     return (
       <Chip
-        label={`${policy.promo_codes_to_disallow.length} excluded`}
+        label={`${policy.promo_code_ids.length} allowed`}
         size="small"
         sx={{
-          bgcolor: "warning.50",
-          color: "warning.dark",
+          bgcolor: "success.50",
+          color: "success.main",
           fontWeight: 500,
           fontSize: "0.75rem",
         }}
       />
     );
   }
+  // blocklist
   return (
     <Chip
-      label="All allowed"
+      label={`${policy.promo_code_ids.length} blocked`}
       size="small"
       sx={{
-        bgcolor: "success.50",
-        color: "success.main",
+        bgcolor: "warning.50",
+        color: "warning.dark",
         fontWeight: 500,
         fontSize: "0.75rem",
       }}
@@ -143,11 +116,12 @@ export default function RatePlanPolicy() {
 
   // Drawer state
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [selected, setSelected] = useState<AutocompleteOption[]>([]);
+  const [policyMode, setPolicyMode] = useState<PolicyMode>("all");
+  const [selectedCodes, setSelectedCodes] = useState<CodeOption[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const options = buildOptions(codes);
+  const codeOptions = buildCodeOptions(codes);
   const editingPlan = ratePlans.find((rp) => rp.id === editingId);
 
   // Load all policies
@@ -160,7 +134,13 @@ export default function RatePlanPolicy() {
           .get(`/rate-plans/${rp.id}/promo-policy`)
           .then((res) => {
             const d = res.data.data.attributes;
-            return { rpId: rp.id, policy: { id: res.data.data.id, ...d } as RatePlanPromoPolicy };
+            return {
+              rpId: rp.id,
+              policy: {
+                id: res.data.data.id,
+                ...d,
+              } as RatePlanPromoPolicy,
+            };
           })
           .catch(() => ({ rpId: rp.id, policy: null }))
       )
@@ -177,7 +157,15 @@ export default function RatePlanPolicy() {
   // Open edit drawer
   const openEdit = (rpId: string) => {
     const policy = policies[rpId] || null;
-    setSelected(policyToSelected(policy, options));
+    if (policy) {
+      setPolicyMode(policy.promo_code_policy as PolicyMode);
+      setSelectedCodes(
+        codeOptions.filter((o) => policy.promo_code_ids.includes(o.value))
+      );
+    } else {
+      setPolicyMode("all");
+      setSelectedCodes([]);
+    }
     setEditingId(rpId);
     setSaved(false);
   };
@@ -187,30 +175,16 @@ export default function RatePlanPolicy() {
     setSaved(false);
   };
 
-  // Handle autocomplete change
-  const handleSelectionChange = (
-    _: unknown,
-    newValue: AutocompleteOption[]
-  ) => {
-    // If "All" was just selected, clear individual selections
-    const hadAll = selected.some((o) => o.value === ALL_COUPONS_VALUE);
-    const hasAll = newValue.some((o) => o.value === ALL_COUPONS_VALUE);
-
-    if (!hadAll && hasAll) {
-      // User just selected "All" — keep only the All option
-      setSelected(newValue.filter((o) => o.value === ALL_COUPONS_VALUE));
-    } else if (hadAll && newValue.length > 1) {
-      // User selected an individual while "All" was active — remove "All"
-      setSelected(newValue.filter((o) => o.value !== ALL_COUPONS_VALUE));
-    } else {
-      setSelected(newValue);
-    }
-  };
-
   const save = async () => {
     if (!editingId) return;
     setSaving(true);
-    const payload = selectedToPayload(selected);
+    const payload = {
+      promo_code_policy: policyMode,
+      promo_code_ids:
+        policyMode === "allowlist" || policyMode === "blocklist"
+          ? selectedCodes.map((o) => o.value)
+          : [],
+    };
     const res = await api.put(
       `/rate-plans/${editingId}/promo-policy`,
       payload
@@ -225,9 +199,7 @@ export default function RatePlanPolicy() {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const isAllSelected = selected.some(
-    (o) => o.value === ALL_COUPONS_VALUE
-  );
+  const showCodePicker = policyMode === "allowlist" || policyMode === "blocklist";
 
   return (
     <Box>
@@ -239,7 +211,7 @@ export default function RatePlanPolicy() {
           color="text.secondary"
           sx={{ mt: 0.25 }}
         >
-          Manage promo code exclusion policies for each rate plan
+          Configure promo code stacking policies for each rate plan
         </Typography>
       </Box>
 
@@ -372,7 +344,7 @@ export default function RatePlanPolicy() {
                     fontFamily: "'JetBrains Mono', monospace",
                   }}
                 >
-                  {editingPlan.code} · {editingPlan.id}
+                  {editingPlan.code} &middot; {editingPlan.id}
                 </Typography>
               </Box>
               <IconButton size="small" onClick={closeEdit}>
@@ -459,7 +431,7 @@ export default function RatePlanPolicy() {
 
               <Divider sx={{ mb: 3 }} />
 
-              {/* Promo code exclusion */}
+              {/* Promo code stacking policy */}
               <Box>
                 <Typography
                   variant="subtitle2"
@@ -471,121 +443,151 @@ export default function RatePlanPolicy() {
                     mb: 0.5,
                   }}
                 >
-                  Promo Codes to Exclude
+                  Promo Code Stacking Policy
                 </Typography>
                 <Typography
                   variant="body2"
                   color="text.secondary"
                   sx={{ mb: 2, fontSize: "0.8125rem" }}
                 >
-                  Adding a promo code to this section means it will not
-                  be considered a valid entry at checkout for guests
-                  booking under this rate plan.
+                  Control which promo codes are valid when guests book under
+                  this rate plan.
                 </Typography>
 
-                <Autocomplete
-                  multiple
-                  options={options}
-                  value={selected}
-                  onChange={handleSelectionChange}
-                  groupBy={(option) => option.group}
-                  getOptionLabel={(option) => option.label}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionDisabled={(option) =>
-                    isAllSelected &&
-                    option.value !== ALL_COUPONS_VALUE
-                  }
-                  disableCloseOnSelect
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      placeholder={
-                        selected.length === 0
-                          ? "Search promo codes..."
-                          : ""
+                {/* Policy mode selector */}
+                <FormControl fullWidth size="small" sx={{ mb: 2.5 }}>
+                  <InputLabel>Policy</InputLabel>
+                  <Select
+                    value={policyMode}
+                    label="Policy"
+                    onChange={(e) => {
+                      setPolicyMode(e.target.value as PolicyMode);
+                      if (
+                        e.target.value === "all" ||
+                        e.target.value === "none"
+                      ) {
+                        setSelectedCodes([]);
                       }
-                      size="small"
-                    />
-                  )}
-                  renderTags={(value, getTagProps) =>
-                    value.map((option, index) => {
-                      const { key, ...rest } = getTagProps({ index });
-                      return (
-                        <Chip
-                          key={key}
-                          label={
-                            option.value === ALL_COUPONS_VALUE
-                              ? "All promo codes"
-                              : option.value
-                          }
-                          size="small"
-                          {...rest}
-                          sx={{
-                            fontFamily:
-                              option.value !== ALL_COUPONS_VALUE
-                                ? "'JetBrains Mono', monospace"
-                                : undefined,
-                            fontSize: "0.75rem",
-                          }}
-                        />
-                      );
-                    })
-                  }
-                  renderGroup={(params) => (
-                    <li key={params.key}>
-                      <Typography
-                        sx={{
-                          px: 2,
-                          py: 0.75,
-                          fontSize: "0.6875rem",
-                          fontWeight: 600,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.05em",
-                          color: "grey.500",
-                          bgcolor: "grey.50",
-                        }}
-                      >
-                        {params.group}
-                      </Typography>
-                      <ul style={{ padding: 0 }}>
-                        {params.children}
-                      </ul>
-                    </li>
-                  )}
-                  sx={{ mb: 2 }}
-                />
-
-                {/* Preview of current state */}
-                {selected.length > 0 && (
-                  <Paper
-                    variant="outlined"
-                    sx={{
-                      p: 2,
-                      bgcolor: isAllSelected
-                        ? "error.50"
-                        : "warning.50",
-                      borderColor: isAllSelected
-                        ? "error.200"
-                        : "warning.200",
                     }}
                   >
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: isAllSelected
-                          ? "error.dark"
-                          : "warning.dark",
-                        fontSize: "0.8125rem",
-                      }}
-                    >
-                      {isAllSelected
-                        ? "All promo codes will be blocked for this rate plan. No promo codes will be accepted at checkout."
-                        : `${selected.length} promo code${selected.length > 1 ? "s" : ""} will be blocked: ${selected.map((s) => s.value).join(", ")}`}
-                    </Typography>
-                  </Paper>
+                    <MenuItem value="all">
+                      All codes valid
+                    </MenuItem>
+                    <MenuItem value="none">
+                      No codes valid
+                    </MenuItem>
+                    <MenuItem value="allowlist">
+                      Only these codes (allowlist)
+                    </MenuItem>
+                    <MenuItem value="blocklist">
+                      All except these codes (blocklist)
+                    </MenuItem>
+                  </Select>
+                </FormControl>
+
+                {/* Code picker for allowlist/blocklist */}
+                {showCodePicker && (
+                  <Autocomplete
+                    multiple
+                    options={codeOptions}
+                    value={selectedCodes}
+                    onChange={(_, newValue) => setSelectedCodes(newValue)}
+                    getOptionLabel={(option) => option.label}
+                    isOptionEqualToValue={(option, value) =>
+                      option.value === value.value
+                    }
+                    disableCloseOnSelect
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder={
+                          selectedCodes.length === 0
+                            ? "Search promo codes..."
+                            : ""
+                        }
+                        size="small"
+                        label={
+                          policyMode === "allowlist"
+                            ? "Allowed Codes"
+                            : "Blocked Codes"
+                        }
+                      />
+                    )}
+                    renderTags={(value, getTagProps) =>
+                      value.map((option, index) => {
+                        const { key, ...rest } = getTagProps({ index });
+                        return (
+                          <Chip
+                            key={key}
+                            label={
+                              codes.find((c) => c.id === option.value)
+                                ?.code ?? option.value
+                            }
+                            size="small"
+                            {...rest}
+                            sx={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              fontSize: "0.75rem",
+                            }}
+                          />
+                        );
+                      })
+                    }
+                    sx={{ mb: 2 }}
+                  />
                 )}
+
+                {/* Preview of current state */}
+                <Paper
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    bgcolor:
+                      policyMode === "none"
+                        ? "error.50"
+                        : policyMode === "blocklist"
+                          ? "warning.50"
+                          : policyMode === "allowlist"
+                            ? "info.50"
+                            : "success.50",
+                    borderColor:
+                      policyMode === "none"
+                        ? "error.200"
+                        : policyMode === "blocklist"
+                          ? "warning.200"
+                          : policyMode === "allowlist"
+                            ? "info.200"
+                            : "success.200",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color:
+                        policyMode === "none"
+                          ? "error.dark"
+                          : policyMode === "blocklist"
+                            ? "warning.dark"
+                            : policyMode === "allowlist"
+                              ? "info.dark"
+                              : "success.dark",
+                      fontSize: "0.8125rem",
+                    }}
+                  >
+                    {policyMode === "all" &&
+                      "All promo codes are accepted for this rate plan."}
+                    {policyMode === "none" &&
+                      "No promo codes will be accepted. The promo code field will be hidden at checkout."}
+                    {policyMode === "allowlist" &&
+                      (selectedCodes.length === 0
+                        ? "No codes selected yet. Only selected codes will be accepted."
+                        : `Only ${selectedCodes.length} code${selectedCodes.length > 1 ? "s" : ""} will be accepted: ${selectedCodes.map((s) => codes.find((c) => c.id === s.value)?.code ?? s.value).join(", ")}`)}
+                    {policyMode === "blocklist" &&
+                      (selectedCodes.length === 0
+                        ? "No codes blocked. All codes will be accepted."
+                        : `${selectedCodes.length} code${selectedCodes.length > 1 ? "s" : ""} will be blocked: ${selectedCodes.map((s) => codes.find((c) => c.id === s.value)?.code ?? s.value).join(", ")}`)}
+                  </Typography>
+                </Paper>
               </Box>
             </Box>
 

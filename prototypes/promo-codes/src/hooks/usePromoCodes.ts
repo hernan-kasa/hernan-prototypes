@@ -73,7 +73,6 @@ export function useProperties() {
 
   useEffect(() => {
     api.get("/properties").then((res) => {
-      // JSON:API format: unwrap { data: [{ id, type, attributes }] }
       const items = res.data.data.map(
         (r: JsonApiResource<{ name: string }>) => ({
           id: r.id,

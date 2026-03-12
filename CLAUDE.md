@@ -46,6 +46,32 @@ hernan-prototypes/
 - Root `build.mjs` builds all prototypes and assembles them under `dist/<name>/`
 - Deployed to Netlify at https://hernan-prototypes.netlify.app
 
+## Starting a New Prototype
+
+1. Hernan provides the prototype name and high-level idea
+2. Claude Code scaffolds the folder: `prototypes/<name>/` with `documentation/`, `src/`, `package.json`, `vite.config.ts`, and adds the SPA redirect to `netlify.toml`
+3. Hernan moves the spec file into `prototypes/<name>/documentation/`
+4. Claude reads the spec and building begins
+
+## Development & Deployment Workflow
+
+Hernan builds prototypes locally with Claude Code, then deploys via GitHub → Netlify:
+
+1. **Build locally** — Claude Code writes the code; Hernan validates visually by running the dev server
+2. **Commit & push to GitHub** — When the prototype is ready, commit changes and push to `main`
+3. **Netlify auto-deploys** — Netlify watches the `main` branch; every push triggers a build
+   - Netlify runs `npm run build` (which executes `build.mjs`)
+   - `build.mjs` installs + builds every prototype under `prototypes/` and assembles output into `dist/`
+   - Netlify publishes the `dist/` folder
+4. **Live at** https://hernan-prototypes.netlify.app — each prototype is available at `/<name>/`
+
+Key files in this workflow:
+- `build.mjs` — root build script that builds all prototypes
+- `netlify.toml` — Netlify config (build command, publish dir, SPA redirects)
+- `public/index.html` — landing page linking to all prototypes
+
+When adding a new prototype, also add a SPA redirect entry in `netlify.toml`.
+
 ## Kasa Domain Context
 
 Hernan's work spans:

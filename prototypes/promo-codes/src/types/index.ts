@@ -15,23 +15,24 @@ export interface JsonApiListResponse<T> {
   meta?: Record<string, unknown>;
 }
 
-// --- Promo Code (aligned with price-api Coupon schema) ---
+// --- Promo Code (aligned with V1 product spec) ---
 
 export interface PromoCodeAttributes {
   code: string;
   name: string;
-  discount_type: "PERCENTAGE" | "FIXED"; // price-api CouponType enum
+  category: string;
+  discount_type: "percentage" | "fixed_amount";
   discount_value: number;
-  is_active: boolean; // price-api: isActive
+  status: "active" | "inactive";
   property_ids: string[];
-  valid_after: string | null; // price-api: validAfter
-  valid_before: string | null; // price-api: validBefore
+  valid_from: string | null;
+  valid_until: string | null;
   max_uses: number | null;
+  max_uses_per_guest: number | null;
   current_uses: number;
   min_booking_amount: number | null;
-  min_nights: number | null; // price-api: minNights
-  max_nights: number | null; // price-api: maxNights
-  channel: string;
+  min_nights: number | null;
+  max_nights: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -48,6 +49,7 @@ export interface ValidateRequest {
   property_id: string;
   rate_plan_id?: string;
   booking_amount: number;
+  guest_id?: string;
   check_in_date?: string; // YYYY-MM-DD
   check_out_date?: string; // YYYY-MM-DD
 }
@@ -56,6 +58,7 @@ export interface ValidateResponse {
   valid: boolean;
   discount_type?: string;
   discount_value?: number;
+  calculated_discount?: number;
   name?: string;
   message?: string;
 }
@@ -77,12 +80,12 @@ export interface RatePlan {
   booking_type: string;
 }
 
-// --- Rate Plan Policy (aligned with price-api/rate-service) ---
+// --- Rate Plan Policy (V1 product spec stacking model) ---
 
 export interface RatePlanPromoPolicyAttributes {
   rate_plan_id: string;
-  disallow_all_promo_codes: boolean; // price-api: disallowAllPromoCodes
-  promo_codes_to_disallow: string[]; // price-api: promoCodesToDisallow (code strings)
+  promo_code_policy: "all" | "none" | "allowlist" | "blocklist";
+  promo_code_ids: string[]; // promo code UUIDs for allowlist/blocklist
 }
 
 export interface RatePlanPromoPolicy extends RatePlanPromoPolicyAttributes {

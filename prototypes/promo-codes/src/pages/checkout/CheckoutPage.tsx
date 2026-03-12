@@ -57,11 +57,6 @@ const PROPERTY_ADDRESSES: Record<string, string> = {
 
 /* ---------- Pricing ---------- */
 
-/**
- * Base per-night rates per rate plan (OTA parity — before kasa.com discount).
- * In production these come from the Rate Calendar Service; static for demo.
- * LOS discounts are baked into these rates (no separate extended-stay option).
- */
 const RATE_BASE_PRICES: Record<string, number> = {
   "rp-001": 210, // Best Available Rate
   "rp-002": 189, // Non-Refundable Rate
@@ -69,14 +64,8 @@ const RATE_BASE_PRICES: Record<string, number> = {
   "rp-007": 165, // Group Rate (negotiated)
 };
 
-/** kasa.com direct-booking discount — checkbox is ON by default */
 const KASA_DISCOUNT_PCT = 10;
 
-/**
- * Access codes unlock negotiated rate plans (corporate / group).
- * In production these are passed via the ?eventCode= URL parameter
- * (legacy name); internally we call them "access codes."
- */
 const ACCESS_CODE_MAP: Record<string, string[]> = {
   CORP: ["rp-004"],
   GROUP: ["rp-007"],
@@ -174,7 +163,8 @@ export default function CheckoutPage() {
       )
     : ratePlans.filter((rp) => rp.id === "rp-001" || rp.id === "rp-002");
 
-  const promoBlocked = policy?.disallow_all_promo_codes === true;
+  // Promo blocked when policy is "none"
+  const promoBlocked = policy?.promo_code_policy === "none";
   const selectedProperty = properties.find((p) => p.id === propertyId);
   const selectedRatePlan = ratePlans.find((rp) => rp.id === ratePlanId);
 
@@ -186,6 +176,7 @@ export default function CheckoutPage() {
       property_id: propertyId,
       rate_plan_id: ratePlanId,
       booking_amount: bookingAmount,
+      guest_id: email || undefined,
       check_in_date: checkInDate,
       check_out_date: checkOutDate,
     });
@@ -347,7 +338,7 @@ export default function CheckoutPage() {
             </Typography>
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
               <Chip
-                label={`${formatDate(checkInDate)} → ${formatDate(checkOutDate)}`}
+                label={`${formatDate(checkInDate)} \u2192 ${formatDate(checkOutDate)}`}
                 size="small"
                 sx={{
                   bgcolor: "rgba(255,255,255,0.2)",
@@ -374,7 +365,7 @@ export default function CheckoutPage() {
         <Grid container spacing={4}>
           {/* ========== Left Column: Forms ========== */}
           <Grid size={{ xs: 12, md: 7 }}>
-            {/* Demo Controls — property & date pickers */}
+            {/* Demo Controls */}
             <Paper
               variant="outlined"
               sx={{ p: 2, mb: 3, bgcolor: "grey.50", borderStyle: "dashed" }}
@@ -662,7 +653,7 @@ export default function CheckoutPage() {
                 </Box>
               </RadioGroup>
 
-              {/* Access code — corporate / group access */}
+              {/* Access code */}
               {!activeAccessCode && (
                 <Box sx={{ mt: 2 }}>
                   {!accessCodeExpanded && (
@@ -740,7 +731,7 @@ export default function CheckoutPage() {
               variant="outlined"
               sx={{ p: 3, position: "sticky", top: 24 }}
             >
-              {/* Cart header — mini property card */}
+              {/* Cart header */}
               <Box sx={{ display: "flex", gap: 2, mb: 2.5 }}>
                 <Box
                   component="img"
@@ -761,7 +752,7 @@ export default function CheckoutPage() {
                     {selectedProperty?.name}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    {formatDate(checkInDate)} — {formatDate(checkOutDate)}
+                    {formatDate(checkInDate)} \u2014 {formatDate(checkOutDate)}
                   </Typography>
                   <Typography
                     variant="caption"

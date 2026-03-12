@@ -21,25 +21,30 @@ interface Props {
 }
 
 function formatDiscount(code: PromoCode) {
-  return code.discount_type === "PERCENTAGE"
+  return code.discount_type === "percentage"
     ? `${code.discount_value}%`
     : `$${code.discount_value.toFixed(2)}`;
 }
 
 function formatDateRange(code: PromoCode) {
-  if (!code.valid_after && !code.valid_before) return "\u2014";
-  const after = code.valid_after
-    ? new Date(code.valid_after).toLocaleDateString()
+  if (!code.valid_from && !code.valid_until) return "\u2014";
+  const from = code.valid_from
+    ? new Date(code.valid_from).toLocaleDateString()
     : "\u2014";
-  const before = code.valid_before
-    ? new Date(code.valid_before).toLocaleDateString()
+  const until = code.valid_until
+    ? new Date(code.valid_until).toLocaleDateString()
     : "\u2014";
-  return `${after} \u2192 ${before}`;
+  return `${from} \u2192 ${until}`;
 }
 
 function formatUsage(code: PromoCode) {
   const max = code.max_uses !== null ? code.max_uses : "\u221E";
   return `${code.current_uses} / ${max}`;
+}
+
+function formatPerGuest(code: PromoCode) {
+  if (code.max_uses_per_guest === null) return "\u2014";
+  return `${code.max_uses_per_guest}/guest`;
 }
 
 export default function PromoCodeTable({ codes, onStatusToggle }: Props) {
@@ -53,16 +58,17 @@ export default function PromoCodeTable({ codes, onStatusToggle }: Props) {
 
   return (
     <TableContainer sx={{ overflowX: "auto" }}>
-      <Table size="small" sx={{ minWidth: 800 }}>
+      <Table size="small" sx={{ minWidth: 900 }}>
         <TableHead>
           <TableRow sx={{ "& th": { bgcolor: "grey.50", whiteSpace: "nowrap" } }}>
             <TableCell>Code</TableCell>
             <TableCell>Name</TableCell>
+            <TableCell>Category</TableCell>
             <TableCell>Discount</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Valid Period</TableCell>
             <TableCell>Usage</TableCell>
-            <TableCell>Min Nights</TableCell>
+            <TableCell>Per-Guest</TableCell>
             <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -90,17 +96,25 @@ export default function PromoCodeTable({ codes, onStatusToggle }: Props) {
                 <Typography variant="body2">{code.name}</Typography>
               </TableCell>
               <TableCell>
+                <Chip
+                  label={code.category}
+                  size="small"
+                  variant="outlined"
+                  sx={{ fontSize: "0.7rem", textTransform: "capitalize" }}
+                />
+              </TableCell>
+              <TableCell>
                 <Typography variant="body2" fontWeight={500}>
                   {formatDiscount(code)}
                 </Typography>
               </TableCell>
               <TableCell>
                 <Chip
-                  label={code.is_active ? "Active" : "Inactive"}
+                  label={code.status === "active" ? "Active" : "Inactive"}
                   size="small"
                   sx={{
-                    bgcolor: code.is_active ? "success.light" : "grey.100",
-                    color: code.is_active ? "success.main" : "grey.600",
+                    bgcolor: code.status === "active" ? "success.light" : "grey.100",
+                    color: code.status === "active" ? "success.main" : "grey.600",
                     fontWeight: 600,
                     fontSize: "0.6875rem",
                     height: 22,
@@ -119,13 +133,13 @@ export default function PromoCodeTable({ codes, onStatusToggle }: Props) {
               </TableCell>
               <TableCell>
                 <Typography variant="body2" color="text.secondary">
-                  {code.min_nights ?? "\u2014"}
+                  {formatPerGuest(code)}
                 </Typography>
               </TableCell>
               <TableCell align="right">
                 <StatusToggle
                   id={code.id}
-                  isActive={code.is_active}
+                  status={code.status}
                   onToggle={onStatusToggle}
                 />
                 <Tooltip title="Edit">
