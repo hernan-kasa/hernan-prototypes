@@ -9,6 +9,13 @@
   to = "/payment-assigner/index.html"
   status = 200
 
+# Proxy API calls to Railway backend
+[[redirects]]
+  from = "/promo-codes/api/*"
+  to = "https://promo-codes-demo-production.up.railway.app/api/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/promo-codes/*"
   to = "/promo-codes/index.html"

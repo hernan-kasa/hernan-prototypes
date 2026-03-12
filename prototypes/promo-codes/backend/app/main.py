@@ -19,7 +19,11 @@ app = FastAPI(title="Promo Code Service", version="2.0.0")
 # CORS — allow Vite dev server (local dev) and any Railway preview
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:5174"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://hernan-prototypes.netlify.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
