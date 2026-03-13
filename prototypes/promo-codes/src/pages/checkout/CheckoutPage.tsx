@@ -689,7 +689,7 @@ export default function CheckoutPage() {
                         slotProps={{
                           input: {
                             sx: {
-                              fontFamily: "monospace",
+                              fontFamily: "Roboto Mono, monospace",
                               textTransform: "uppercase",
                               fontSize: "0.85rem",
                             },

@@ -180,7 +180,7 @@ export default function PromoCodeForm() {
                 slotProps={{
                   input: {
                     sx: {
-                      fontFamily: "'JetBrains Mono', monospace",
+                      fontFamily: "Roboto Mono, monospace",
                       textTransform: "uppercase",
                     },
                   },

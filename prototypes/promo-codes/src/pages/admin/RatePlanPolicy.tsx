@@ -251,7 +251,7 @@ export default function RatePlanPolicy() {
                   <TableCell>
                     <Typography
                       sx={{
-                        fontFamily: "'JetBrains Mono', monospace",
+                        fontFamily: "Roboto Mono, monospace",
                         fontSize: "0.8125rem",
                         color: "primary.main",
                         fontWeight: 500,
@@ -341,7 +341,7 @@ export default function RatePlanPolicy() {
                   variant="caption"
                   color="text.secondary"
                   sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "Roboto Mono, monospace",
                   }}
                 >
                   {editingPlan.code} &middot; {editingPlan.id}
@@ -526,7 +526,7 @@ export default function RatePlanPolicy() {
                             size="small"
                             {...rest}
                             sx={{
-                              fontFamily: "'JetBrains Mono', monospace",
+                              fontFamily: "Roboto Mono, monospace",
                               fontSize: "0.75rem",
                             }}
                           />

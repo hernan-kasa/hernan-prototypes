@@ -4,67 +4,132 @@ import { createTheme } from "@mui/material/styles";
  * MUI theme matching kontrol-ui design system.
  * Color palette sourced from kontrol-ui/libs/shared/themes/base-theme.
  */
+
+// kontrol-ui color tokens
+const blue = {
+  100: "#E9F1FF",
+  200: "#A8CAFE",
+  300: "#448CFB",
+  400: "#2678F5",
+  500: "#1058C5",
+  600: "#08357A",
+};
+
+const neutral = {
+  50: "#FFFFFF",
+  100: "#F1F5FB",
+  200: "#E6E9F1",
+  300: "#CDD6E5",
+  400: "#93A2BA",
+  500: "#72839D",
+  600: "#526480",
+  700: "#1A3865",
+  800: "#001D4A",
+  900: "#001029",
+};
+
+const green = {
+  100: "#E3FAE4",
+  200: "#B7EAC5",
+  300: "#01A62F",
+  400: "#01A62F",
+  500: "#005F1A",
+};
+
+const red = {
+  100: "#FFEAEA",
+  200: "#FDCCCC",
+  300: "#E85959",
+  400: "#CD0F0F",
+  500: "#AF0D0D",
+};
+
+const orange = {
+  100: "#FFF4E3",
+  200: "#FFE3BA",
+  300: "#FFBB54",
+  400: "#C37F19",
+  600: "#774100",
+};
+
+const INTER_FAMILY = "Inter, Helvetica, Arial, sans-serif";
+const ROBOTO_MONO_FAMILY = "Roboto Mono, monospace";
+
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#2678F5",
-      light: "#448CFB",
-      dark: "#1058C5",
+      main: blue[400],
+      light: blue[300],
+      dark: blue[500],
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#6B7280",
+      main: blue[100],
+      dark: blue[100],
+      contrastText: blue[400],
     },
     success: {
-      main: "#0D8A4E",
-      light: "#E6F4ED",
+      main: green[300],
+      light: green[100],
     },
     error: {
-      main: "#D32F2F",
-      light: "#FDEDED",
+      main: red[400],
+      light: red[100],
     },
     warning: {
-      main: "#ED6C02",
-      light: "#FFF4E5",
+      main: orange[300],
+      light: orange[100],
     },
     grey: {
-      50: "#FAFBFC",
-      100: "#F5F5F5",
-      200: "#E8E8E8",
-      300: "#D0D0D0",
-      400: "#9E9E9E",
-      500: "#757575",
-      600: "#616161",
-      700: "#424242",
-      800: "#303030",
-      900: "#2D2D2D",
+      50: neutral[50],
+      100: neutral[100],
+      200: neutral[200],
+      300: neutral[300],
+      400: neutral[400],
+      500: neutral[500],
+      600: neutral[600],
+      700: neutral[700],
+      800: neutral[800],
+      900: neutral[900],
+    },
+    text: {
+      primary: neutral[800],
+      secondary: neutral[600],
     },
     background: {
-      default: "#FAFBFC",
-      paper: "#FFFFFF",
+      default: neutral[100],
+      paper: neutral[50],
     },
-    divider: "#E8E8E8",
+    divider: neutral[200],
   },
   typography: {
-    fontFamily:
-      '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    h5: { fontWeight: 600, fontSize: "1.25rem" },
-    h6: { fontWeight: 600, fontSize: "1rem" },
-    subtitle1: { fontWeight: 600, fontSize: "0.875rem" },
-    subtitle2: { fontWeight: 600, fontSize: "0.8125rem", color: "#424242" },
-    body2: { fontSize: "0.8125rem" },
-    caption: { fontSize: "0.75rem", color: "#757575" },
+    fontFamily: INTER_FAMILY,
+    allVariants: {
+      color: neutral[800],
+    },
+    h1: { fontWeight: 700, fontSize: "1.75rem", lineHeight: 1.25 },
+    h2: { fontWeight: 700, fontSize: "1.5rem", lineHeight: 1.25 },
+    h3: { fontWeight: 700, fontSize: "1.25rem", lineHeight: 1.5 },
+    h4: { fontWeight: 700, fontSize: "1rem", lineHeight: 1.5 },
+    h5: { fontWeight: 700, fontSize: "0.875rem", lineHeight: 1.5 },
+    h6: { fontWeight: 700, fontSize: "0.75rem", lineHeight: 1.5 },
+    subtitle1: { fontWeight: 700, fontSize: "1rem", lineHeight: 1.5 },
+    subtitle2: { fontWeight: 700, fontSize: "0.875rem", lineHeight: 1.5 },
+    body1: { fontWeight: 400, fontSize: "1rem", lineHeight: 1.5 },
+    body2: { fontWeight: 400, fontSize: "0.875rem", lineHeight: 1.5 },
+    caption: { fontWeight: 400, fontSize: "0.625rem", color: neutral[600] },
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 12,
   },
   components: {
     MuiAppBar: {
       defaultProps: { elevation: 0 },
       styleOverrides: {
         root: {
-          backgroundColor: "#FFFFFF",
-          borderBottom: "1px solid #E8E8E8",
+          backgroundColor: neutral[50],
+          borderBottom: `1px solid ${neutral[200]}`,
+          borderRadius: 0,
         },
       },
     },
@@ -72,18 +137,28 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: "none",
-          fontWeight: 600,
-          fontSize: "0.8125rem",
-          borderRadius: 6,
+          fontWeight: 700,
+          fontSize: "0.875rem",
+          lineHeight: "1.5rem",
+          borderRadius: 12,
+          fontFamily: INTER_FAMILY,
+        },
+        sizeSmall: {
+          height: 30,
+          fontSize: "0.75rem",
+          lineHeight: "1rem",
         },
         contained: {
           boxShadow: "none",
           "&:hover": { boxShadow: "none" },
         },
         outlined: {
-          borderColor: "#D0D0D0",
-          color: "#424242",
-          "&:hover": { borderColor: "#9E9E9E", backgroundColor: "#FAFBFC" },
+          borderColor: neutral[300],
+          color: neutral[700],
+          "&:hover": {
+            borderColor: neutral[400],
+            backgroundColor: neutral[100],
+          },
         },
       },
     },
@@ -91,63 +166,122 @@ const theme = createTheme({
       defaultProps: { elevation: 0 },
       styleOverrides: {
         outlined: {
-          borderColor: "#E8E8E8",
+          borderColor: neutral[200],
+          borderRadius: "12px !important",
+        },
+        rounded: {
+          borderRadius: 12,
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
         head: {
-          fontWeight: 600,
+          fontWeight: 700,
           fontSize: "0.75rem",
           textTransform: "uppercase",
           letterSpacing: "0.04em",
-          color: "#757575",
-          borderBottomColor: "#E8E8E8",
+          color: neutral[500],
+          borderBottomColor: neutral[200],
         },
         root: {
-          borderBottomColor: "#F5F5F5",
-          fontSize: "0.8125rem",
+          borderBottomColor: neutral[200],
+          fontSize: "0.875rem",
         },
       },
     },
     MuiChip: {
       styleOverrides: {
-        root: { fontWeight: 500, fontSize: "0.75rem" },
+        root: {
+          fontWeight: 700,
+          fontSize: "0.875rem",
+          borderRadius: 8,
+          fontFamily: INTER_FAMILY,
+        },
+        sizeSmall: {
+          fontSize: "0.75rem",
+        },
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          fontSize: "0.8125rem",
+          fontSize: "0.875rem",
+          lineHeight: "1.375rem",
+          borderRadius: 12,
+          minHeight: 40,
+          backgroundColor: "white",
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#D0D0D0",
+            borderColor: neutral[300],
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#9E9E9E",
+            borderColor: neutral[400],
           },
+        },
+        input: {
+          padding: "9px 12px",
         },
       },
     },
     MuiInputLabel: {
       styleOverrides: {
-        root: { fontSize: "0.8125rem" },
+        root: { fontSize: "0.875rem" },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "white",
+          "&.Mui-disabled": {
+            backgroundColor: neutral[100],
+          },
+        },
       },
     },
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          borderRight: "1px solid #E8E8E8",
+          borderRight: `1px solid ${neutral[200]}`,
+          borderRadius: 0,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 0,
         },
       },
     },
     MuiCard: {
       defaultProps: { elevation: 0 },
       styleOverrides: {
-        root: { borderColor: "#E8E8E8" },
+        root: { borderColor: neutral[200] },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          borderRadius: 16,
+          alignItems: "center",
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          textDecoration: "none",
+          textUnderlineOffset: 3,
+          textDecorationColor: "inherit",
+          "&:hover": {
+            color: blue[500],
+            textDecoration: "underline",
+          },
+        },
       },
     },
   },
 });
 
+export { ROBOTO_MONO_FAMILY };
 export default theme;

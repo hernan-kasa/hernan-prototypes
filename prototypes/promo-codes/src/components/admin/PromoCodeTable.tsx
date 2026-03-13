@@ -83,7 +83,7 @@ export default function PromoCodeTable({ codes, onStatusToggle }: Props) {
                 <Typography
                   variant="body2"
                   sx={{
-                    fontFamily: "'JetBrains Mono', monospace",
+                    fontFamily: "Roboto Mono, monospace",
                     fontWeight: 600,
                     color: "primary.main",
                     fontSize: "0.8125rem",
