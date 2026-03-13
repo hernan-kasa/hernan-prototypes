@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { cpSync, mkdirSync, readdirSync, existsSync } from 'fs';
+import { cpSync, mkdirSync, readdirSync, existsSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 const prototypesDir = join(import.meta.dirname, 'prototypes');
@@ -21,5 +21,13 @@ for (const proto of prototypes) {
   execSync('npm install && npm run build', { cwd: dir, stdio: 'inherit' });
   cpSync(join(dir, 'dist'), join(distDir, proto.name), { recursive: true });
 }
+
+// Write _redirects file for Netlify (proxy + SPA rules)
+const redirects = [
+  '/promo-codes/api/*  https://promo-codes-api-production.up.railway.app/api/:splat  200!',
+  '/payment-assigner/*  /payment-assigner/index.html  200',
+  '/promo-codes/*  /promo-codes/index.html  200',
+].join('\n');
+writeFileSync(join(distDir, '_redirects'), redirects + '\n');
 
 console.log(`\nBuilt ${prototypes.length} prototypes into dist/`);
