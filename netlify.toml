@@ -20,3 +20,20 @@
   from = "/promo-codes/*"
   to = "/promo-codes/index.html"
   status = 200
+
+[[redirects]]
+  from = "/konnect/*"
+  to = "/konnect/index.html"
+  status = 200
+
+# Contract-to-Rate-Plan: proxy API to Railway backend
+[[redirects]]
+  from = "/contract-to-rate-plan/api/*"
+  to = "https://contract-to-rate-plan-api-production.up.railway.app/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/contract-to-rate-plan/*"
+  to = "/contract-to-rate-plan/index.html"
+  status = 200

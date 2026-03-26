@@ -25,8 +25,11 @@ for (const proto of prototypes) {
 // Write _redirects file for Netlify (proxy + SPA rules)
 const redirects = [
   '/promo-codes/api/*  https://promo-codes-api-production.up.railway.app/api/:splat  200!',
+  '/contract-to-rate-plan/api/*  https://contract-to-rate-plan-api-production.up.railway.app/api/:splat  200!',
   '/payment-assigner/*  /payment-assigner/index.html  200',
   '/promo-codes/*  /promo-codes/index.html  200',
+  '/konnect/*  /konnect/index.html  200',
+  '/contract-to-rate-plan/*  /contract-to-rate-plan/index.html  200',
 ].join('\n');
 writeFileSync(join(distDir, '_redirects'), redirects + '\n');
 
