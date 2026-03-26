@@ -213,6 +213,11 @@ This tool adds two new paths to rate plan creation: **"Create from Contract"** (
   - **% off BAR** (corporate) → `rateModifier: { type: "percentage", percentageAmount: X, modification: "decrease" }` applied universally
   - **Group block rate** → `rateModifier.type: "set"` with `setAmount` per room type
 - Market segmentation defaults: Corporate → `{ category: "Contract", segment: "Corporate", subSegment: "Negotiated" }`; Group → `{ category: "Group", segment: based on contract type }`
+- **Booking behavior mapping rules (V1):**
+  - Corporate, non-commissionable ("net, non-commissionable") → suggest "Bill to Company (Direct Bill)"
+  - Corporate, commissionable → suggest "Pay at Check-in"
+  - Group with deposit schedule present → suggest "Group Deposit Schedule"
+  - If payment terms are ambiguous or missing → leave blank for manual selection
 - Blackout dates are corporate-only and always provided as a bullet list with event names — reliable extraction
 
 ### 6.2 Financial Tooling (Indirect)
@@ -481,7 +486,8 @@ User clicks "Create Rate Plan" → chooses "From Contract" or "Amend"
 
 ### Rollout
 
-- **Phase 1 (Hackathon → Production):** Deploy "Create from Contract" flow supporting both corporate rate agreements (fixed seasonal + % off BAR) and group contracts. Extraction schema validated against 7 real contracts. Target Kirsten as first user for UAT.
+- **Phase 0 (Hackathon Prototype — COMPLETE):** Standalone prototype at `hernan-prototypes/prototypes/contract-to-rate-plan/`, live at `https://hernan-prototypes.netlify.app/contract-to-rate-plan/`. Covers both Create from Contract and Amend flows with demo mock data. Backend exists for real Claude API extraction but is not deployed (Railway free tier exhausted). No real rate plans are created.
+- **Phase 1 (Hackathon → Production):** Deploy "Create from Contract" flow supporting both corporate rate agreements (fixed seasonal + % off BAR) and group contracts. Extraction schema validated against 7 real contracts. Target Kirsten as first user for UAT. Requires: deploy backend with ANTHROPIC_API_KEY, connect to real rate plan creation API, add auth.
 - **Phase 2:** Enable "Amend Existing Rate Plan" flow with diff viewer.
 - **Phase 3:** Room type fuzzy matching (auto-suggest internal room types from contract names), multi-property batch creation, and extraction quality monitoring dashboard.
 
@@ -512,11 +518,11 @@ User clicks "Create Rate Plan" → chooses "From Contract" or "Amend"
 - **Existing rate plan APIs** — all confirmed to exist (`POST /api/rate-plans`, `POST /api/rate-plans/:planId/latest`, lookup endpoints for cancellation policies, room types, rate codes)
 - **Booking behavior profiles** — must be queryable to populate the suggestion dropdown
 
-### Open Questions
+### Open Questions (Resolved)
 
-1. **Claude API routing:** Should the Kontrol UI call Claude API directly (client-side with a proxy) or route through a Kasa backend service? Backend is cleaner for logging/auditability but adds a hop.
-2. **Rate code generation:** Should the tool auto-generate a rate code from the contract (e.g., `CORP-ACME2026`) or require manual entry? Auto-generation reduces errors but may conflict with existing naming conventions. (Extraction map confirms rate codes are NOT in contracts — "to be provided" — so this is always a manual or auto-generated field.)
-3. **Seasonal rate table → room type groups mapping:** For corporate contracts with 4 seasons × 3 room types (= 12 rate cells), what is the optimal `roomTypeGroups` structure? One group per room type with `periodic` modifier level? Or one group per season? Needs alignment with how `rateModifierLevel: "periodic"` works in the existing model.
+1. **Claude API routing:** ~~Should the Kontrol UI call Claude API directly (client-side with a proxy) or route through a Kasa backend service?~~ **Resolved (2026-03-26):** Backend proxy (FastAPI + Anthropic SDK). Cleaner for logging/auditability. Prototype includes backend at `prototypes/contract-to-rate-plan/backend/` with `POST /api/extract` endpoint.
+2. **Rate code generation:** ~~Should the tool auto-generate a rate code from the contract or require manual entry?~~ **Resolved (2026-03-26):** Manual entry for V1. Rate codes are never in contracts ("to be provided"). Review form leaves `code` and `rateCode` blank with required-field indicators.
+3. **Seasonal rate table → room type groups mapping:** ~~One group per room type with `periodic` modifier level? Or one group per season?~~ **Resolved (2026-03-26):** One room type group per unique contract room type, each with `rateModifierLevel: "periodic"` and a seasons array containing the rate for each date range. This produces N groups (one per room type) × M seasons per group.
 
 ---
 
@@ -551,3 +557,10 @@ User clicks "Create Rate Plan" → chooses "From Contract" or "Amend"
 | 2026-03-26 | Room type names require manual mapping (not auto-matched in V1) | Contract names are not standardized — "Studio (Kitchenette)" vs. "Studio Plus" etc. |
 | 2026-03-26 | Rate code / booking code must be entered manually | Not present in contracts analyzed — references "to be provided" |
 | 2026-03-26 | Phase 1 includes both corporate and group contracts | Extraction map confirmed both types are well-understood with 7 sample contracts |
+| 2026-03-26 | Claude API routes through a backend proxy (FastAPI + Anthropic SDK), not client-side | Resolves Open Question #1 — cleaner for logging/auditability |
+| 2026-03-26 | Rate code is manual entry in V1, not auto-generated | Resolves Open Question #2 — codes are never in contracts |
+| 2026-03-26 | One room type group per contract room type with `periodic` modifier and seasons array | Resolves Open Question #3 — aligns with how the existing model handles seasonal variation |
+| 2026-03-26 | Booking behavior mapping: corporate non-commissionable → "Bill to Company"; commissionable → "Pay at Check-in"; group with deposit schedule → "Group Deposit Schedule" | Prototype implementation — rules should be validated with Adam Kiss |
+| 2026-03-26 | Amendment diff is shallow (top-level fields only, not individual rate table cells) | V1 scope — deep diff of room type group rate changes deferred to V2 |
+| 2026-03-26 | V1 prototype is standalone in hernan-prototypes, not a Kontrol UI PR | Hackathon timeline — production integration is a separate workstream |
+| 2026-03-26 | Confirmation navigates back to rate plans list with snackbar, not standalone success page | Matches production Kontrol patterns per Hernan direction |
