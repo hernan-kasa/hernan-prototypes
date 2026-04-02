@@ -37,3 +37,8 @@
   from = "/contract-to-rate-plan/*"
   to = "/contract-to-rate-plan/index.html"
   status = 200
+
+[[redirects]]
+  from = "/kontrol-finance/*"
+  to = "/kontrol-finance/index.html"
+  status = 200

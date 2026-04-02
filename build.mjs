@@ -30,6 +30,7 @@ const redirects = [
   '/promo-codes/*  /promo-codes/index.html  200',
   '/konnect/*  /konnect/index.html  200',
   '/contract-to-rate-plan/*  /contract-to-rate-plan/index.html  200',
+  '/kontrol-finance/*  /kontrol-finance/index.html  200',
 ].join('\n');
 writeFileSync(join(distDir, '_redirects'), redirects + '\n');
 
