@@ -180,400 +180,400 @@ export const mockDescriptions: Record<string, DescriptionEntry[]> = {
 export const mockPropertyAmenities: Record<string, AmenityEntry[]> = {
   'prop-123': [
     // Bedroom & Sleeping
-    { code: 'B02', value: 1, isLockedImport: false },     // Number of bedrooms
-    { code: 'B17', value: 2, isLockedImport: false },     // Total number of beds
-    { code: 'B18', value: true, isLockedImport: false },   // Bed Linen provided
-    { code: 'G02', value: 1, isLockedImport: false },     // Number of king size beds
-    { code: 'E11', value: true, isLockedImport: false },   // Essentials (towels, sheets, soap, etc.)
-    { code: 'B82', value: true, isLockedImport: false },   // Extra long beds
+    { typeCode: 'B02', attributes: ['1'] },     // Number of bedrooms
+    { typeCode: 'B17', attributes: ['2'] },     // Total number of beds
+    { typeCode: 'B18', attributes: [] },   // Bed Linen provided
+    { typeCode: 'G02', attributes: ['1'] },     // Number of king size beds
+    { typeCode: 'E11', attributes: [] },   // Essentials (towels, sheets, soap, etc.)
+    { typeCode: 'B82', attributes: [] },   // Extra long beds
 
     // Bathroom
-    { code: 'A18', value: true, isLockedImport: false },   // Bath or Shower
-    { code: 'A44', value: 'P', isLockedImport: false },    // Bathroom — Private
-    { code: 'D06', value: 'W', isLockedImport: false },    // Shower — walk in
-    { code: 'H41', value: true, isLockedImport: false },   // Hair dryer
-    { code: 'B30', value: true, isLockedImport: false },   // Bathroom amenities (free toiletries)
-    { code: 'B01', value: 1, isLockedImport: false },     // Number of bathrooms
-    { code: 'T07', value: 1, isLockedImport: false },     // Number of toilets
-    { code: 'C34', value: true, isLockedImport: false },   // Shampoo
-    { code: 'C35', value: true, isLockedImport: false },   // Conditioner
-    { code: 'C36', value: true, isLockedImport: false },   // Body soap
-    { code: 'B99', value: true, isLockedImport: false },   // Toilet paper
+    { typeCode: 'A18', attributes: [] },   // Bath or Shower
+    { typeCode: 'A44', attributes: ['P'] },    // Bathroom — Private
+    { typeCode: 'D06', attributes: ['W'] },    // Shower — walk in
+    { typeCode: 'H41', attributes: [] },   // Hair dryer
+    { typeCode: 'B30', attributes: [] },   // Bathroom amenities (free toiletries)
+    { typeCode: 'B01', attributes: ['1'] },     // Number of bathrooms
+    { typeCode: 'T07', attributes: ['1'] },     // Number of toilets
+    { typeCode: 'C34', attributes: [] },   // Shampoo
+    { typeCode: 'C35', attributes: [] },   // Conditioner
+    { typeCode: 'C36', attributes: [] },   // Body soap
+    { typeCode: 'B99', attributes: [] },   // Toilet paper
 
     // Kitchen & Cooking
-    { code: 'K04', value: true, isLockedImport: false },   // Kitchen
-    { code: 'C08', value: 'E', isLockedImport: true },     // Kitchen stove — electric
-    { code: 'C11', value: 'R', isLockedImport: true },     // Coffee maker — regular
-    { code: 'D01', value: true, isLockedImport: true },    // Dishwasher
-    { code: 'F04', value: 'Y', isLockedImport: true },     // Fridge — available
-    { code: 'M02', value: true, isLockedImport: false },   // Microwave oven
-    { code: 'O01', value: 'E', isLockedImport: false },    // Oven — electric
-    { code: 'T06', value: true, isLockedImport: false },   // Toaster
-    { code: 'E01', value: true, isLockedImport: false },   // Electric kettle
-    { code: 'K08', value: true, isLockedImport: false },   // Kitchen utensils
-    { code: 'C17', value: true, isLockedImport: false },   // Cooking basics (pots and pans)
-    { code: 'A28', value: true, isLockedImport: false },   // Plates and bowls
-    { code: 'C31', value: true, isLockedImport: false },   // Wine glasses
-    { code: 'C30', value: true, isLockedImport: false },   // Trash cans
-    { code: 'B16', value: true, isLockedImport: false },   // Blender
+    { typeCode: 'K04', attributes: [] },   // Kitchen
+    { typeCode: 'C08', attributes: ['E'] },     // Kitchen stove — electric
+    { typeCode: 'C11', attributes: ['R'] },     // Coffee maker — regular
+    { typeCode: 'D01', attributes: [] },    // Dishwasher
+    { typeCode: 'F04', attributes: ['Y'] },     // Fridge — available
+    { typeCode: 'M02', attributes: [] },   // Microwave oven
+    { typeCode: 'O01', attributes: ['E'] },    // Oven — electric
+    { typeCode: 'T06', attributes: [] },   // Toaster
+    { typeCode: 'E01', attributes: [] },   // Electric kettle
+    { typeCode: 'K08', attributes: [] },   // Kitchen utensils
+    { typeCode: 'C17', attributes: [] },   // Cooking basics (pots and pans)
+    { typeCode: 'A28', attributes: [] },   // Plates and bowls
+    { typeCode: 'C31', attributes: [] },   // Wine glasses
+    { typeCode: 'C30', attributes: [] },   // Trash cans
+    { typeCode: 'B16', attributes: [] },   // Blender
 
     // Living Space & Furniture
-    { code: 'A22', value: 'Y', isLockedImport: false },    // Desk — available
-    { code: 'A29', value: 'S', isLockedImport: false },    // Sitting area — with sofa/chair
-    { code: 'C44', value: true, isLockedImport: false },   // Dining table
-    { code: 'H42', value: true, isLockedImport: false },   // Hangers
-    { code: 'A38', value: 'Y', isLockedImport: false },    // Closet — available
-    { code: 'B88', value: true, isLockedImport: false },   // Wooden / Parquet floor
+    { typeCode: 'A22', attributes: ['Y'] },    // Desk — available
+    { typeCode: 'A29', attributes: ['S'] },    // Sitting area — with sofa/chair
+    { typeCode: 'C44', attributes: [] },   // Dining table
+    { typeCode: 'H42', attributes: [] },   // Hangers
+    { typeCode: 'A38', attributes: ['Y'] },    // Closet — available
+    { typeCode: 'B88', attributes: [] },   // Wooden / Parquet floor
 
     // Climate Control
-    { code: 'A01', value: true, isLockedImport: false },   // Airconditioning
-    { code: 'H40', value: 'C', isLockedImport: false },    // Heating — central
-    { code: 'A46', value: true, isLockedImport: false },   // Self-controlled heating/cooling
+    { typeCode: 'A01', attributes: [] },   // Airconditioning
+    { typeCode: 'H40', attributes: ['C'] },    // Heating — central
+    { typeCode: 'A46', attributes: [] },   // Self-controlled heating/cooling
 
     // Entertainment & Technology
-    { code: 'W07', value: 'Y', isLockedImport: false },    // WiFi — Free
-    { code: 'C66', value: true, isLockedImport: false },   // Smart TV
-    { code: 'F10', value: true, isLockedImport: false },   // Flat-screen TV
-    { code: 'N07', value: true, isLockedImport: false },   // Netflix
-    { code: 'I02', value: 'C', isLockedImport: false },    // Ethernet Internet — cable
+    { typeCode: 'W07', attributes: ['Y'] },    // WiFi — Free
+    { typeCode: 'C66', attributes: [] },   // Smart TV
+    { typeCode: 'F10', attributes: [] },   // Flat-screen TV
+    { typeCode: 'N07', attributes: [] },   // Netflix
+    { typeCode: 'I02', attributes: ['C'] },    // Ethernet Internet — cable
 
     // Laundry & Housekeeping
-    { code: 'W01', value: true, isLockedImport: false },   // Washing machine
-    { code: 'D08', value: true, isLockedImport: false },   // Dryer
-    { code: 'I03', value: true, isLockedImport: false },   // Iron
-    { code: 'I04', value: true, isLockedImport: false },   // Ironing board
-    { code: 'V03', value: true, isLockedImport: false },   // Vacuum cleaner
+    { typeCode: 'W01', attributes: [] },   // Washing machine
+    { typeCode: 'D08', attributes: [] },   // Dryer
+    { typeCode: 'I03', attributes: [] },   // Iron
+    { typeCode: 'I04', attributes: [] },   // Ironing board
+    { typeCode: 'V03', attributes: [] },   // Vacuum cleaner
 
     // Safety & Security
-    { code: 'S44', value: true, isLockedImport: false },   // Smoke alarm
-    { code: 'C18', value: true, isLockedImport: false },   // Carbon monoxide detector
-    { code: 'F14', value: true, isLockedImport: false },   // Fire extinguisher
-    { code: 'F13', value: true, isLockedImport: false },   // First Aid Kit
-    { code: 'S32', value: true, isLockedImport: false },   // Safe
-    { code: 'A95', value: true, isLockedImport: false },   // Key card access
-    { code: 'A64', value: true, isLockedImport: false },   // CCTV in common areas
+    { typeCode: 'S44', attributes: [] },   // Smoke alarm
+    { typeCode: 'C18', attributes: [] },   // Carbon monoxide detector
+    { typeCode: 'F14', attributes: [] },   // Fire extinguisher
+    { typeCode: 'F13', attributes: [] },   // First Aid Kit
+    { typeCode: 'S32', attributes: [] },   // Safe
+    { typeCode: 'A95', attributes: [] },   // Key card access
+    { typeCode: 'A64', attributes: [] },   // CCTV in common areas
 
     // Parking & Transport
-    { code: 'G01', value: 'G', isLockedImport: false },    // Parking — Garage
-    { code: 'E03', value: true, isLockedImport: true },    // Elevator
-    { code: 'E06', value: true, isLockedImport: false },   // Electric vehicle charging station
-    { code: 'P13', value: 2, isLockedImport: false },     // Number of parking lots
+    { typeCode: 'G01', attributes: ['G'] },    // Parking — Garage
+    { typeCode: 'E03', attributes: [] },    // Elevator
+    { typeCode: 'E06', attributes: [] },   // Electric vehicle charging station
+    { typeCode: 'P13', attributes: ['2'] },     // Number of parking lots
 
     // Outdoor & Garden
-    { code: 'B11', value: true, isLockedImport: false },   // Balcony
-    { code: 'T02', value: true, isLockedImport: false },   // Terrace
+    { typeCode: 'B11', attributes: [] },   // Balcony
+    { typeCode: 'T02', attributes: [] },   // Terrace
 
     // Pool, Spa & Wellness
-    { code: 'F12', value: true, isLockedImport: false },   // Fitness/Gym
+    { typeCode: 'F12', attributes: [] },   // Fitness/Gym
 
     // Property Details
-    { code: 'P06', value: 65, isLockedImport: false },     // Surface area (m2)
-    { code: 'R07', value: 3, isLockedImport: false },     // Total number of rooms
-    { code: 'D99', value: 12, isLockedImport: false },    // Number of floors
-    { code: 'N01', value: true, isLockedImport: false },   // Non-smokers
-    { code: 'S37', value: 'N', isLockedImport: false },    // Smoking allowed — No
+    { typeCode: 'P06', attributes: ['65'] },     // Surface area (m2)
+    { typeCode: 'R07', attributes: ['3'] },     // Total number of rooms
+    { typeCode: 'D99', attributes: ['12'] },    // Number of floors
+    { typeCode: 'N01', attributes: [] },   // Non-smokers
+    { typeCode: 'S37', attributes: ['N'] },    // Smoking allowed — No
 
     // Policies
-    { code: 'P02', value: 'R', isLockedImport: false },    // Pets — on request
+    { typeCode: 'P02', attributes: ['R'] },    // Pets — on request
   ],
   'prop-456': [
     // Fewer amenities — newer property, less populated
-    { code: 'B02', value: 1, isLockedImport: false },
-    { code: 'B17', value: 1, isLockedImport: false },
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'E11', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K04', value: true, isLockedImport: false },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'Y', isLockedImport: true },
-    { code: 'A01', value: true, isLockedImport: false },
-    { code: 'H40', value: 'C', isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'F10', value: true, isLockedImport: false },
-    { code: 'W01', value: true, isLockedImport: false },
-    { code: 'D08', value: true, isLockedImport: false },
-    { code: 'I03', value: true, isLockedImport: false },
-    { code: 'S44', value: true, isLockedImport: false },
-    { code: 'C18', value: true, isLockedImport: false },
-    { code: 'F14', value: true, isLockedImport: false },
-    { code: 'E03', value: true, isLockedImport: true },
-    { code: 'G01', value: 'S', isLockedImport: false },
-    { code: 'N01', value: true, isLockedImport: false },
+    { typeCode: 'B02', attributes: ['1'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'E11', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['Y'] },
+    { typeCode: 'A01', attributes: [] },
+    { typeCode: 'H40', attributes: ['C'] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'F10', attributes: [] },
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
+    { typeCode: 'I03', attributes: [] },
+    { typeCode: 'S44', attributes: [] },
+    { typeCode: 'C18', attributes: [] },
+    { typeCode: 'F14', attributes: [] },
+    { typeCode: 'E03', attributes: [] },
+    { typeCode: 'G01', attributes: ['S'] },
+    { typeCode: 'N01', attributes: [] },
   ],
   // Room types — Austin
   'rt-001': [ // Studio Suite
-    { code: 'B02', value: 0, isLockedImport: false },     // Studio — 0 separate bedrooms
-    { code: 'B17', value: 1, isLockedImport: false },
-    { code: 'Q02', value: 1, isLockedImport: false },     // 1 queen bed
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K03', value: 'Y', isLockedImport: false },   // Kitchenette
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'Y', isLockedImport: true },
-    { code: 'A43', value: true, isLockedImport: false },   // Mini-refrigerator
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'P06', value: 35, isLockedImport: false },    // 35 m2
+    { typeCode: 'B02', attributes: ['0'] },     // Studio — 0 separate bedrooms
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'Q02', attributes: ['1'] },     // 1 queen bed
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K03', attributes: ['Y'] },   // Kitchenette
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['Y'] },
+    { typeCode: 'A43', attributes: [] },   // Mini-refrigerator
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'P06', attributes: ['35'] },    // 35 m2
   ],
   'rt-002': [ // 1BR King
-    { code: 'B02', value: 1, isLockedImport: false },
-    { code: 'B17', value: 1, isLockedImport: false },
-    { code: 'G02', value: 1, isLockedImport: false },     // 1 king bed
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K04', value: true, isLockedImport: false },   // Full kitchen
-    { code: 'C08', value: 'E', isLockedImport: true },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'F', isLockedImport: true },    // Fridge with freezer
-    { code: 'D01', value: true, isLockedImport: true },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'A22', value: 'Y', isLockedImport: false },
-    { code: 'A29', value: 'S', isLockedImport: false },
-    { code: 'P06', value: 55, isLockedImport: false },    // 55 m2
-    { code: 'W01', value: true, isLockedImport: false },
-    { code: 'D08', value: true, isLockedImport: false },
+    { typeCode: 'B02', attributes: ['1'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'G02', attributes: ['1'] },     // 1 king bed
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K04', attributes: [] },   // Full kitchen
+    { typeCode: 'C08', attributes: ['E'] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['F'] },    // Fridge with freezer
+    { typeCode: 'D01', attributes: [] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'A22', attributes: ['Y'] },
+    { typeCode: 'A29', attributes: ['S'] },
+    { typeCode: 'P06', attributes: ['55'] },    // 55 m2
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
   ],
   'rt-003': [ // 2BR Suite
-    { code: 'B02', value: 2, isLockedImport: false },
-    { code: 'B17', value: 3, isLockedImport: false },
-    { code: 'G02', value: 1, isLockedImport: false },
-    { code: 'Q02', value: 1, isLockedImport: false },
-    { code: 'S03', value: 1, isLockedImport: false },     // 1 sofa bed
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'B01', value: 2, isLockedImport: false },     // 2 bathrooms
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K04', value: true, isLockedImport: false },
-    { code: 'C08', value: 'E', isLockedImport: true },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'F', isLockedImport: true },
-    { code: 'D01', value: true, isLockedImport: true },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'A22', value: 'Y', isLockedImport: false },
-    { code: 'A29', value: 'S', isLockedImport: false },
-    { code: 'P06', value: 85, isLockedImport: false },    // 85 m2
-    { code: 'W01', value: true, isLockedImport: false },
-    { code: 'D08', value: true, isLockedImport: false },
-    { code: 'I03', value: true, isLockedImport: false },
-    { code: 'B11', value: true, isLockedImport: false },  // Balcony
+    { typeCode: 'B02', attributes: ['2'] },
+    { typeCode: 'B17', attributes: ['3'] },
+    { typeCode: 'G02', attributes: ['1'] },
+    { typeCode: 'Q02', attributes: ['1'] },
+    { typeCode: 'S03', attributes: ['1'] },     // 1 sofa bed
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'B01', attributes: ['2'] },     // 2 bathrooms
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'C08', attributes: ['E'] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['F'] },
+    { typeCode: 'D01', attributes: [] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'A22', attributes: ['Y'] },
+    { typeCode: 'A29', attributes: ['S'] },
+    { typeCode: 'P06', attributes: ['85'] },    // 85 m2
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
+    { typeCode: 'I03', attributes: [] },
+    { typeCode: 'B11', attributes: [] },  // Balcony
   ],
   // — Kasa River North Chicago — fully populated —
   'prop-789': [
     // Bedroom & Sleeping
-    { code: 'B02', value: 1, isLockedImport: false },
-    { code: 'B17', value: 2, isLockedImport: false },
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'G02', value: 1, isLockedImport: false },
-    { code: 'E11', value: true, isLockedImport: false },
-    { code: 'B82', value: true, isLockedImport: false },
-    { code: 'A36', value: true, isLockedImport: false },
-    { code: 'C43', value: true, isLockedImport: false },
-    { code: 'C48', value: true, isLockedImport: false },
+    { typeCode: 'B02', attributes: ['1'] },
+    { typeCode: 'B17', attributes: ['2'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'G02', attributes: ['1'] },
+    { typeCode: 'E11', attributes: [] },
+    { typeCode: 'B82', attributes: [] },
+    { typeCode: 'A36', attributes: [] },
+    { typeCode: 'C43', attributes: [] },
+    { typeCode: 'C48', attributes: [] },
     // Bathroom
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'B01', value: 1, isLockedImport: false },
-    { code: 'T07', value: 1, isLockedImport: false },
-    { code: 'C34', value: true, isLockedImport: false },
-    { code: 'C35', value: true, isLockedImport: false },
-    { code: 'C36', value: true, isLockedImport: false },
-    { code: 'B99', value: true, isLockedImport: false },
-    { code: 'A02', value: true, isLockedImport: false },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'B01', attributes: ['1'] },
+    { typeCode: 'T07', attributes: ['1'] },
+    { typeCode: 'C34', attributes: [] },
+    { typeCode: 'C35', attributes: [] },
+    { typeCode: 'C36', attributes: [] },
+    { typeCode: 'B99', attributes: [] },
+    { typeCode: 'A02', attributes: [] },
     // Kitchen & Cooking
-    { code: 'K04', value: true, isLockedImport: false },
-    { code: 'C08', value: 'G', isLockedImport: false },
-    { code: 'C11', value: 'R', isLockedImport: false },
-    { code: 'D01', value: true, isLockedImport: false },
-    { code: 'F04', value: 'F', isLockedImport: false },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'O01', value: 'G', isLockedImport: false },
-    { code: 'T06', value: true, isLockedImport: false },
-    { code: 'E01', value: true, isLockedImport: false },
-    { code: 'K08', value: true, isLockedImport: false },
-    { code: 'C17', value: true, isLockedImport: false },
-    { code: 'A28', value: true, isLockedImport: false },
-    { code: 'C31', value: true, isLockedImport: false },
-    { code: 'C30', value: true, isLockedImport: false },
-    { code: 'B16', value: true, isLockedImport: false },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'C08', attributes: ['G'] },
+    { typeCode: 'C11', attributes: ['R'] },
+    { typeCode: 'D01', attributes: [] },
+    { typeCode: 'F04', attributes: ['F'] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'O01', attributes: ['G'] },
+    { typeCode: 'T06', attributes: [] },
+    { typeCode: 'E01', attributes: [] },
+    { typeCode: 'K08', attributes: [] },
+    { typeCode: 'C17', attributes: [] },
+    { typeCode: 'A28', attributes: [] },
+    { typeCode: 'C31', attributes: [] },
+    { typeCode: 'C30', attributes: [] },
+    { typeCode: 'B16', attributes: [] },
     // Living Space & Furniture
-    { code: 'A22', value: 'C', isLockedImport: false },
-    { code: 'A29', value: 'S', isLockedImport: false },
-    { code: 'C44', value: true, isLockedImport: false },
-    { code: 'H42', value: true, isLockedImport: false },
-    { code: 'A38', value: 'Y', isLockedImport: false },
-    { code: 'B88', value: true, isLockedImport: false },
+    { typeCode: 'A22', attributes: ['C'] },
+    { typeCode: 'A29', attributes: ['S'] },
+    { typeCode: 'C44', attributes: [] },
+    { typeCode: 'H42', attributes: [] },
+    { typeCode: 'A38', attributes: ['Y'] },
+    { typeCode: 'B88', attributes: [] },
     // Climate Control
-    { code: 'A01', value: true, isLockedImport: false },
-    { code: 'H40', value: 'C', isLockedImport: false },
-    { code: 'A46', value: true, isLockedImport: false },
+    { typeCode: 'A01', attributes: [] },
+    { typeCode: 'H40', attributes: ['C'] },
+    { typeCode: 'A46', attributes: [] },
     // Entertainment & Technology
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'F10', value: true, isLockedImport: false },
-    { code: 'N07', value: true, isLockedImport: false },
-    { code: 'I02', value: 'C', isLockedImport: false },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'F10', attributes: [] },
+    { typeCode: 'N07', attributes: [] },
+    { typeCode: 'I02', attributes: ['C'] },
     // Laundry & Housekeeping
-    { code: 'W01', value: true, isLockedImport: false },
-    { code: 'D08', value: true, isLockedImport: false },
-    { code: 'I03', value: true, isLockedImport: false },
-    { code: 'I04', value: true, isLockedImport: false },
-    { code: 'V03', value: true, isLockedImport: false },
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
+    { typeCode: 'I03', attributes: [] },
+    { typeCode: 'I04', attributes: [] },
+    { typeCode: 'V03', attributes: [] },
     // Safety & Security
-    { code: 'S44', value: true, isLockedImport: false },
-    { code: 'C18', value: true, isLockedImport: false },
-    { code: 'F14', value: true, isLockedImport: false },
-    { code: 'F13', value: true, isLockedImport: false },
-    { code: 'S32', value: true, isLockedImport: false },
-    { code: 'A95', value: true, isLockedImport: false },
-    { code: 'A64', value: true, isLockedImport: false },
+    { typeCode: 'S44', attributes: [] },
+    { typeCode: 'C18', attributes: [] },
+    { typeCode: 'F14', attributes: [] },
+    { typeCode: 'F13', attributes: [] },
+    { typeCode: 'S32', attributes: [] },
+    { typeCode: 'A95', attributes: [] },
+    { typeCode: 'A64', attributes: [] },
     // Parking & Transport
-    { code: 'G01', value: 'V', isLockedImport: false },
-    { code: 'E03', value: true, isLockedImport: false },
-    { code: 'P13', value: 1, isLockedImport: false },
+    { typeCode: 'G01', attributes: ['V'] },
+    { typeCode: 'E03', attributes: [] },
+    { typeCode: 'P13', attributes: ['1'] },
     // Outdoor
-    { code: 'B11', value: true, isLockedImport: false },
+    { typeCode: 'B11', attributes: [] },
     // Pool & Wellness
-    { code: 'F12', value: true, isLockedImport: false },
-    { code: 'S61', value: true, isLockedImport: false },
+    { typeCode: 'F12', attributes: [] },
+    { typeCode: 'S61', attributes: [] },
     // Property Details
-    { code: 'P06', value: 70, isLockedImport: false },
-    { code: 'R07', value: 3, isLockedImport: false },
-    { code: 'D99', value: 42, isLockedImport: false },
-    { code: 'N01', value: true, isLockedImport: false },
-    { code: 'S37', value: 'N', isLockedImport: false },
+    { typeCode: 'P06', attributes: ['70'] },
+    { typeCode: 'R07', attributes: ['3'] },
+    { typeCode: 'D99', attributes: ['42'] },
+    { typeCode: 'N01', attributes: [] },
+    { typeCode: 'S37', attributes: ['N'] },
     // Policies
-    { code: 'P02', value: 'R', isLockedImport: false },
+    { typeCode: 'P02', attributes: ['R'] },
   ],
   'rt-006': [ // Studio Suite — Chicago
-    { code: 'B02', value: 0, isLockedImport: false },
-    { code: 'B17', value: 1, isLockedImport: false },
-    { code: 'Q02', value: 1, isLockedImport: false },
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K03', value: 'Y', isLockedImport: false },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'Y', isLockedImport: false },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'P06', value: 38, isLockedImport: false },
-    { code: 'A01', value: true, isLockedImport: false },
-    { code: 'H40', value: 'C', isLockedImport: false },
+    { typeCode: 'B02', attributes: ['0'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'Q02', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K03', attributes: ['Y'] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['Y'] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'P06', attributes: ['38'] },
+    { typeCode: 'A01', attributes: [] },
+    { typeCode: 'H40', attributes: ['C'] },
   ],
   'rt-007': [ // 1BR King — Chicago
-    { code: 'B02', value: 1, isLockedImport: false },
-    { code: 'B17', value: 1, isLockedImport: false },
-    { code: 'G02', value: 1, isLockedImport: false },
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K04', value: true, isLockedImport: false },
-    { code: 'C08', value: 'G', isLockedImport: false },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'F', isLockedImport: false },
-    { code: 'D01', value: true, isLockedImport: false },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'A22', value: 'C', isLockedImport: false },
-    { code: 'A29', value: 'S', isLockedImport: false },
-    { code: 'P06', value: 60, isLockedImport: false },
-    { code: 'W01', value: true, isLockedImport: false },
-    { code: 'D08', value: true, isLockedImport: false },
-    { code: 'A01', value: true, isLockedImport: false },
-    { code: 'H40', value: 'C', isLockedImport: false },
+    { typeCode: 'B02', attributes: ['1'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'G02', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'C08', attributes: ['G'] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['F'] },
+    { typeCode: 'D01', attributes: [] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'A22', attributes: ['C'] },
+    { typeCode: 'A29', attributes: ['S'] },
+    { typeCode: 'P06', attributes: ['60'] },
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
+    { typeCode: 'A01', attributes: [] },
+    { typeCode: 'H40', attributes: ['C'] },
   ],
   'rt-008': [ // 2BR Penthouse — Chicago
-    { code: 'B02', value: 2, isLockedImport: false },
-    { code: 'B17', value: 2, isLockedImport: false },
-    { code: 'G02', value: 1, isLockedImport: false },
-    { code: 'Q02', value: 1, isLockedImport: false },
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'B01', value: 2, isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K04', value: true, isLockedImport: false },
-    { code: 'C08', value: 'G', isLockedImport: false },
-    { code: 'O01', value: 'G', isLockedImport: false },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'F', isLockedImport: false },
-    { code: 'D01', value: true, isLockedImport: false },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'A22', value: 'C', isLockedImport: false },
-    { code: 'A29', value: 'S', isLockedImport: false },
-    { code: 'P06', value: 110, isLockedImport: false },
-    { code: 'W01', value: true, isLockedImport: false },
-    { code: 'D08', value: true, isLockedImport: false },
-    { code: 'I03', value: true, isLockedImport: false },
-    { code: 'B11', value: true, isLockedImport: false },
-    { code: 'A01', value: true, isLockedImport: false },
-    { code: 'H40', value: 'C', isLockedImport: false },
-    { code: 'A02', value: true, isLockedImport: false },
+    { typeCode: 'B02', attributes: ['2'] },
+    { typeCode: 'B17', attributes: ['2'] },
+    { typeCode: 'G02', attributes: ['1'] },
+    { typeCode: 'Q02', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'B01', attributes: ['2'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'C08', attributes: ['G'] },
+    { typeCode: 'O01', attributes: ['G'] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['F'] },
+    { typeCode: 'D01', attributes: [] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'A22', attributes: ['C'] },
+    { typeCode: 'A29', attributes: ['S'] },
+    { typeCode: 'P06', attributes: ['110'] },
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
+    { typeCode: 'I03', attributes: [] },
+    { typeCode: 'B11', attributes: [] },
+    { typeCode: 'A01', attributes: [] },
+    { typeCode: 'H40', attributes: ['C'] },
+    { typeCode: 'A02', attributes: [] },
   ],
   // Room types — Portland
   'rt-004': [ // Studio
-    { code: 'B02', value: 0, isLockedImport: false },
-    { code: 'B17', value: 1, isLockedImport: false },
-    { code: 'Q02', value: 1, isLockedImport: false },
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'K03', value: 'Y', isLockedImport: false },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'P06', value: 30, isLockedImport: false },
+    { typeCode: 'B02', attributes: ['0'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'Q02', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'K03', attributes: ['Y'] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'P06', attributes: ['30'] },
   ],
   'rt-005': [ // 1BR Queen
-    { code: 'B02', value: 1, isLockedImport: false },
-    { code: 'B17', value: 1, isLockedImport: false },
-    { code: 'Q02', value: 1, isLockedImport: false },
-    { code: 'B18', value: true, isLockedImport: false },
-    { code: 'A18', value: true, isLockedImport: false },
-    { code: 'A44', value: 'P', isLockedImport: false },
-    { code: 'D06', value: 'W', isLockedImport: false },
-    { code: 'H41', value: true, isLockedImport: false },
-    { code: 'B30', value: true, isLockedImport: false },
-    { code: 'K04', value: true, isLockedImport: false },
-    { code: 'M02', value: true, isLockedImport: false },
-    { code: 'F04', value: 'Y', isLockedImport: true },
-    { code: 'C66', value: true, isLockedImport: false },
-    { code: 'W07', value: 'Y', isLockedImport: false },
-    { code: 'A22', value: 'Y', isLockedImport: false },
-    { code: 'P06', value: 45, isLockedImport: false },
-    { code: 'W01', value: true, isLockedImport: false },
-    { code: 'D08', value: true, isLockedImport: false },
+    { typeCode: 'B02', attributes: ['1'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'Q02', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['Y'] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'A22', attributes: ['Y'] },
+    { typeCode: 'P06', attributes: ['45'] },
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
   ],
 };
 
@@ -582,7 +582,8 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
     {
       channelId: 'BOO142',
       channelName: 'Booking.com',
-      contentSyncEnabled: false,
+      enabled: true,
+      contentEnabled: false,
       disableReason: 'Duplicate tax issue (Feb 2026)',
       lastSyncAt: '2026-02-01T10:00:00Z',
       lastSyncStatus: 'success',
@@ -590,7 +591,8 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
     {
       channelId: 'EXP270',
       channelName: 'Expedia',
-      contentSyncEnabled: false,
+      enabled: true,
+      contentEnabled: false,
       disableReason: 'Never enabled',
       lastSyncAt: null,
       lastSyncStatus: null,
@@ -598,7 +600,8 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
     {
       channelId: 'AIR298',
       channelName: 'Airbnb',
-      contentSyncEnabled: true,
+      enabled: true,
+      contentEnabled: true,
       lastSyncAt: '2026-03-15T09:00:00Z',
       lastSyncStatus: 'success',
     },
@@ -607,21 +610,24 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
     {
       channelId: 'BOO144',
       channelName: 'Booking.com',
-      contentSyncEnabled: true,
+      enabled: true,
+      contentEnabled: true,
       lastSyncAt: '2026-03-20T10:10:00Z',
       lastSyncStatus: 'success',
     },
     {
       channelId: 'EXP272',
       channelName: 'Expedia',
-      contentSyncEnabled: true,
+      enabled: true,
+      contentEnabled: true,
       lastSyncAt: '2026-03-20T10:10:00Z',
       lastSyncStatus: 'success',
     },
     {
       channelId: 'AIR300',
       channelName: 'Airbnb',
-      contentSyncEnabled: true,
+      enabled: true,
+      contentEnabled: true,
       lastSyncAt: '2026-03-20T10:10:00Z',
       lastSyncStatus: 'success',
     },
@@ -630,7 +636,8 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
     {
       channelId: 'BOO143',
       channelName: 'Booking.com',
-      contentSyncEnabled: false,
+      enabled: true,
+      contentEnabled: false,
       disableReason: 'Duplicate tax issue (Feb 2026)',
       lastSyncAt: null,
       lastSyncStatus: null,
@@ -638,7 +645,8 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
     {
       channelId: 'EXP271',
       channelName: 'Expedia',
-      contentSyncEnabled: false,
+      enabled: true,
+      contentEnabled: false,
       disableReason: 'Never enabled',
       lastSyncAt: null,
       lastSyncStatus: null,
@@ -646,7 +654,8 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
     {
       channelId: 'AIR299',
       channelName: 'Airbnb',
-      contentSyncEnabled: true,
+      enabled: true,
+      contentEnabled: true,
       lastSyncAt: '2026-03-14T12:00:00Z',
       lastSyncStatus: 'success',
     },

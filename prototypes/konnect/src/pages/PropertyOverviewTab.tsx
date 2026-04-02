@@ -53,7 +53,7 @@ function countDirtyDescriptions(scopeKey: string): number {
 }
 
 function channelStatusIcon(status: ChannelSyncStatus) {
-  if (!status.contentSyncEnabled) return <BlockIcon sx={{ fontSize: 16, color: colors.neutral[400] }} />;
+  if (!status.contentEnabled) return <BlockIcon sx={{ fontSize: 16, color: colors.neutral[400] }} />;
   if (status.lastSyncStatus === 'success') return <CheckCircleIcon sx={{ fontSize: 16, color: colors.green[300] }} />;
   if (status.lastSyncStatus === 'failure') return <ErrorIcon sx={{ fontSize: 16, color: colors.red[400] }} />;
   return <WarningAmberIcon sx={{ fontSize: 16, color: colors.orange[300] }} />;
@@ -71,7 +71,7 @@ export default function PropertyOverviewTab({ propertyId, onNavigate }: Props) {
     const propCoreDescs = countCoreDescriptions(propertyId);
     const propAmenities = countAmenities(propertyId);
     const propDirty = countDirtyDescriptions(propertyId);
-    const enabledChannels = channels.filter((c) => c.contentSyncEnabled).length;
+    const enabledChannels = channels.filter((c) => c.contentEnabled).length;
 
     const roomTypeStats = (property?.roomTypes || []).map((rt) => ({
       id: rt.id,
@@ -115,7 +115,7 @@ export default function PropertyOverviewTab({ propertyId, onNavigate }: Props) {
         });
       }
     }
-    const disabledChannels = channels.filter((c) => !c.contentSyncEnabled);
+    const disabledChannels = channels.filter((c) => !c.contentEnabled);
     for (const ch of disabledChannels) {
       actions.push({
         label: `${ch.channelName} sync disabled${ch.disableReason ? ` — ${ch.disableReason}` : ''}`,
@@ -246,7 +246,7 @@ export default function PropertyOverviewTab({ propertyId, onNavigate }: Props) {
                       <Typography variant="caption">{ch.channelName}</Typography>
                     </Box>
                     <Typography variant="caption" sx={{ color: colors.neutral[400] }}>
-                      {ch.contentSyncEnabled ? (ch.lastSyncStatus === 'success' ? 'Synced' : ch.lastSyncStatus || 'Never') : 'Off'}
+                      {ch.contentEnabled ? (ch.lastSyncStatus === 'success' ? 'Synced' : ch.lastSyncStatus || 'Never') : 'Off'}
                     </Typography>
                   </Box>
                 ))}

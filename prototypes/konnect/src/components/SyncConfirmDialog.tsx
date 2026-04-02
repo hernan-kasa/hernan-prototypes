@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -32,16 +33,21 @@ export default function SyncConfirmDialog({ open, channels, contentType, onClose
         <Typography variant="body2">
           This will push {contentLabel[contentType]} to enabled channels via NextPax. Channels with sync disabled will not be affected.
         </Typography>
-        <Box sx={{ mt: 2 }}>
+        <Alert severity="warning" sx={{ mt: 2, mb: 1 }}>
+          <Typography variant="caption" sx={{ fontWeight: 700 }}>
+            Full replace — the API sends the complete {contentLabel[contentType]} set. Any items not included in the payload will be deleted on the channel.
+          </Typography>
+        </Alert>
+        <Box sx={{ mt: 1.5 }}>
           {channels.map((ch) => (
             <Box key={ch.channelId} sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
-              {ch.contentSyncEnabled ? (
+              {ch.contentEnabled ? (
                 <CheckCircleIcon sx={{ fontSize: 16, color: colors.green[300] }} />
               ) : (
                 <BlockIcon sx={{ fontSize: 16, color: colors.neutral[400] }} />
               )}
               <Typography variant="body2">
-                {ch.channelName} — {ch.contentSyncEnabled ? 'will sync' : 'skipped (disabled)'}
+                {ch.channelName} — {ch.contentEnabled ? 'will sync' : ch.enabled ? 'content sync off' : 'channel disabled'}
               </Typography>
             </Box>
           ))}

@@ -21,16 +21,18 @@ export interface DescriptionEntry {
   isDirty?: boolean; // differs from NextPax
 }
 
+// Matches NextPax PropertyAmenitiesInformation shape
 export interface AmenityEntry {
-  code: string;
-  value: string | number | boolean; // boolean for toggles, string for option attribute, number for numeric
-  isLockedImport: boolean;
+  typeCode: string;
+  attributes: string[]; // boolean: [], options: ['P'], number: ['2']
 }
 
+// Matches channel-management IKasaPropertyChannelSetting shape
 export interface ChannelSyncStatus {
   channelId: string;
   channelName: string;
-  contentSyncEnabled: boolean;
+  enabled: boolean;        // channel active for rates/availability
+  contentEnabled: boolean; // content sync active (separate from channel enabled)
   disableReason?: string;
   lastSyncAt: string | null;
   lastSyncStatus: 'success' | 'failure' | 'pending' | null;

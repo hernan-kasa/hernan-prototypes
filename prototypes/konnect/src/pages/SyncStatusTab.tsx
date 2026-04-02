@@ -35,7 +35,7 @@ function formatDate(iso: string | null): string {
 }
 
 function StatusChip({ status }: { status: ChannelSyncStatus }) {
-  if (!status.contentSyncEnabled) {
+  if (!status.contentEnabled) {
     return (
       <Chip
         icon={<BlockIcon sx={{ fontSize: 16 }} />}
@@ -91,14 +91,14 @@ function getWarnings(channels: ChannelSyncStatus[]): string[] {
   const expedia = channels.find((c) => c.channelName === 'Expedia');
   const airbnb = channels.find((c) => c.channelName === 'Airbnb');
 
-  if (airbnb?.contentSyncEnabled) {
+  if (airbnb?.contentEnabled) {
     warnings.push('Content sync is enabled for Airbnb. Manual changes on Airbnb extranet will be overwritten.');
     warnings.push("Airbnb 'Guest Access' and 'Getting Around' fields must be managed directly on Airbnb.");
   }
-  if (bdc && !bdc.contentSyncEnabled && bdc.disableReason) {
-    warnings.push(`Content sync is disabled for Booking.com (${bdc.disableReason}). Content can be authored but will not sync to Booking.`);
+  if (bdc && bdc.enabled && !bdc.contentEnabled && bdc.disableReason) {
+    warnings.push(`Booking.com channel is active but content sync is off (${bdc.disableReason}). Content can be authored but will not sync.`);
   }
-  if (expedia && !expedia.contentSyncEnabled && expedia.disableReason === 'Never enabled') {
+  if (expedia && !expedia.contentEnabled && expedia.disableReason === 'Never enabled') {
     warnings.push('Expedia content sync has never been enabled for this property.');
   }
   warnings.push('Pet fees must be added manually in NextPax channel-specific settings.');
@@ -116,7 +116,7 @@ export default function SyncStatusTab({ propertyId }: Props) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [snackOpen, setSnackOpen] = useState(false);
 
-  const canSync = channels.some((c) => c.contentSyncEnabled);
+  const canSync = channels.some((c) => c.contentEnabled);
 
   const handleSync = () => {
     setConfirmOpen(false);
@@ -153,6 +153,22 @@ export default function SyncStatusTab({ propertyId }: Props) {
                   </Typography>
                   <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
                     {ch.channelId}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="caption" sx={{ color: colors.neutral[500] }}>
+                    Channel
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: ch.enabled ? colors.green[300] : colors.neutral[400] }}>
+                    {ch.enabled ? 'Active' : 'Disabled'}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="caption" sx={{ color: colors.neutral[500] }}>
+                    Content Sync
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: ch.contentEnabled ? colors.green[300] : colors.orange[400] }}>
+                    {ch.contentEnabled ? 'On' : 'Off'}
                   </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

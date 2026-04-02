@@ -11,57 +11,42 @@ import Snackbar from '@mui/material/Snackbar';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Tooltip from '@mui/material/Tooltip';
 import InputBase from '@mui/material/InputBase';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import LockIcon from '@mui/icons-material/Lock';
 import SaveIcon from '@mui/icons-material/Save';
 import SyncIcon from '@mui/icons-material/Sync';
 import SearchIcon from '@mui/icons-material/Search';
 import SyncConfirmDialog from '../components/SyncConfirmDialog';
 import { amenityTypes, AMENITY_CATEGORIES, AmenityType, amenityCategoryMap } from '../data/amenityTypes';
 import { mockPropertyAmenities, mockSyncStatus } from '../data/mockData';
-import { AmenityEntry } from '../types';
 import { colors } from '../theme';
 
 interface Props {
-  scopeKey: string; // propertyId or roomTypeId
+  scopeKey: string;
   propertyId: string;
 }
 
+// Local UI state per amenity — derived from the { typeCode, attributes } API shape
 interface AmenityState {
   enabled: boolean;
-  value: string | number | boolean;
-  isLockedImport: boolean;
+  attributes: string[]; // mirrors NextPax shape
 }
 
 export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
-  // Build initial state: merge amenityTypes with scope's enabled amenities
   const [amenityState, setAmenityState] = useState<Record<string, AmenityState>>(() => {
     const state: Record<string, AmenityState> = {};
-    const propertyAmenities = mockPropertyAmenities[scopeKey] || [];
-    const enabledMap = new Map<string, AmenityEntry>();
-    propertyAmenities.forEach((a) => enabledMap.set(a.code, a));
+    const scopeAmenities = mockPropertyAmenities[scopeKey] || [];
+    const enabledMap = new Map(scopeAmenities.map((a) => [a.typeCode, a.attributes]));
 
     amenityTypes.forEach((at) => {
-      const entry = enabledMap.get(at.code);
-      if (entry) {
-        state[at.code] = {
-          enabled: true,
-          value: entry.value,
-          isLockedImport: entry.isLockedImport,
-        };
-      } else {
-        state[at.code] = {
-          enabled: false,
-          value: at.codeType === 'boolean' ? false : at.codeType === 'number' ? 0 : '',
-          isLockedImport: false,
-        };
-      }
+      const attrs = enabledMap.get(at.code);
+      state[at.code] = attrs !== undefined
+        ? { enabled: true, attributes: [...attrs] }
+        : { enabled: false, attributes: [] };
     });
     return state;
   });
@@ -74,7 +59,6 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
   const channels = mockSyncStatus[propertyId] || [];
   const [showEnabledOnly, setShowEnabledOnly] = useState(false);
 
-  // Filter amenities by search and enabled-only toggle
   const filteredAmenities = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
     return amenityTypes.filter((at) => {
@@ -89,7 +73,6 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
     });
   }, [searchQuery, showEnabledOnly, amenityState]);
 
-  // Group filtered amenities by category
   const groupedAmenities = useMemo(() => {
     const groups = new Map<string, AmenityType[]>();
     filteredAmenities.forEach((at) => {
@@ -109,10 +92,10 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
     setHasUnsavedChanges(true);
   };
 
-  const handleValueChange = (code: string, value: string | number | boolean) => {
+  const handleAttributeChange = (code: string, attributes: string[]) => {
     setAmenityState((prev) => ({
       ...prev,
-      [code]: { ...prev[code], value },
+      [code]: { ...prev[code], attributes },
     }));
     setHasUnsavedChanges(true);
   };
@@ -141,7 +124,7 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
                 {enabledCount} amenities enabled out of {amenityTypes.length}
               </Typography>
               <Typography variant="caption" sx={{ color: colors.neutral[500] }}>
-                Source: NextPax Supply API · {AMENITY_CATEGORIES.length} categories
+                Source: NextPax Supply API · {AMENITY_CATEGORIES.length} categories · Shape: {'{ typeCode, attributes[] }'}
               </Typography>
             </Box>
             {!(savedPendingSync && !hasUnsavedChanges) && (
@@ -191,7 +174,7 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
             >
               <SearchIcon sx={{ fontSize: 18, color: colors.neutral[400], mr: 1 }} />
               <InputBase
-                placeholder="Search amenities by name or code…"
+                placeholder="Search amenities by name or code..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 sx={{ flex: 1, fontSize: '0.8rem', color: colors.neutral[700] }}
@@ -211,9 +194,7 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
                 fontSize: '0.75rem',
                 bgcolor: showEnabledOnly ? colors.blue[400] : colors.neutral[200],
                 color: showEnabledOnly ? '#fff' : colors.neutral[600],
-                '&:hover': {
-                  bgcolor: showEnabledOnly ? colors.blue[400] : colors.neutral[300],
-                },
+                '&:hover': { bgcolor: showEnabledOnly ? colors.blue[400] : colors.neutral[300] },
               }}
             />
           </Box>
@@ -226,7 +207,6 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
         if (!items || items.length === 0) return null;
 
         const enabledInCat = items.filter((a) => amenityState[a.code]?.enabled).length;
-        // Auto-expand categories that have enabled items, or when searching
         const hasEnabled = enabledInCat > 0;
         const isSearching = searchQuery.trim().length > 0;
 
@@ -290,20 +270,14 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
                         <Typography variant="caption" sx={{ color: colors.neutral[400], fontFamily: 'monospace' }}>
                           {amenity.code}
                         </Typography>
-                        {state.isLockedImport && (
-                          <Tooltip title="Imported from PMS — will be overwritten on next sync" arrow>
-                            <LockIcon sx={{ fontSize: 14, color: colors.neutral[400], ml: 0.5 }} />
-                          </Tooltip>
-                        )}
                       </Box>
                     </Box>
 
-                    {/* Value input — only when enabled */}
                     {state.enabled && (
-                      <AmenityValueInput
+                      <AmenityAttributeInput
                         amenity={amenity}
-                        value={state.value}
-                        onChange={(v) => handleValueChange(amenity.code, v)}
+                        attributes={state.attributes}
+                        onChange={(attrs) => handleAttributeChange(amenity.code, attrs)}
                       />
                     )}
                   </Box>
@@ -314,7 +288,6 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
         );
       })}
 
-      {/* Empty state when search yields nothing */}
       {filteredAmenities.length === 0 && (
         <Box sx={{ textAlign: 'center', py: 6 }}>
           <Typography variant="body2" sx={{ color: colors.neutral[500] }}>
@@ -341,32 +314,32 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
   );
 }
 
-// Sub-component for rendering the right input based on codeType
-function AmenityValueInput({
+// Renders the right input control based on codeType, working with the attributes[] shape
+function AmenityAttributeInput({
   amenity,
-  value,
+  attributes,
   onChange,
 }: {
   amenity: AmenityType;
-  value: string | number | boolean;
-  onChange: (v: string | number | boolean) => void;
+  attributes: string[];
+  onChange: (attrs: string[]) => void;
 }) {
   if (amenity.codeType === 'boolean') {
-    // Boolean amenities — no extra input needed (the toggle IS the input)
-    return null;
+    return null; // toggle IS the input — attributes stays []
   }
 
   if (amenity.codeType === 'options' && amenity.options) {
+    const selected = attributes[0] || '';
     return (
       <FormControl size="small" sx={{ minWidth: 140, mr: 1 }}>
         <Select
-          value={typeof value === 'string' ? value : ''}
-          onChange={(e) => onChange(e.target.value)}
+          value={selected}
+          onChange={(e) => onChange(e.target.value ? [e.target.value] : [])}
           displayEmpty
           sx={{ fontSize: '0.8rem', height: 32 }}
         >
           <MenuItem value="" sx={{ fontSize: '0.8rem' }}>
-            <em>Select…</em>
+            <em>Select...</em>
           </MenuItem>
           {amenity.options.map((opt) => (
             <MenuItem key={opt.attribute} value={opt.attribute} sx={{ fontSize: '0.8rem' }}>
@@ -379,12 +352,13 @@ function AmenityValueInput({
   }
 
   if (amenity.codeType === 'number') {
+    const numVal = attributes[0] || '';
     return (
       <TextField
         size="small"
         type="number"
-        value={typeof value === 'number' ? value : ''}
-        onChange={(e) => onChange(e.target.value ? Number(e.target.value) : 0)}
+        value={numVal}
+        onChange={(e) => onChange(e.target.value ? [e.target.value] : [])}
         sx={{ width: 100, mr: 1 }}
         inputProps={{ min: 0, style: { fontSize: '0.8rem' } }}
         placeholder="0"
