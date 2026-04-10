@@ -48,9 +48,20 @@ export interface SyncLogEntry {
   nextpaxRequestId: string;
 }
 
+export interface RoomTypeChannelLink {
+  channel: Channel;
+  url: string;
+  listingId?: string; // For Airbnb — shown as text since users need to log into the right account
+}
+
 export interface RoomType {
   id: string;
-  name: string;
+  name: string; // external/display title
+  internalTitle?: string;
+  nickname?: string;
+  setupInfo: string; // e.g., "Studio", "1BR King"
+  maxOccupancy: number;
+  channelLinks: RoomTypeChannelLink[];
 }
 
 export interface Property {

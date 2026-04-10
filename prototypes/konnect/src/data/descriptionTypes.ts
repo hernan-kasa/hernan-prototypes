@@ -39,3 +39,32 @@ export const compositeLabels: Record<string, string> = {
 
 export const BDC_COMPOSITE_LIMIT = 1990;
 export const AIRBNB_SUMMARY_LIMIT = 500;
+
+// Channel-specific field name mappings (placeholder — will be manually maintained)
+import { Channel } from '../types';
+
+export const channelFieldNames: Record<string, Partial<Record<Channel, string>>> = {
+  'house': { BDC: 'Property Description', Airbnb: 'Listing Description', Expedia: 'Property Description' },
+  'short-introduction': { BDC: 'Short Introduction', Airbnb: 'Summary' },
+  'interior': { BDC: 'Interior Description', Airbnb: 'The Space' },
+  'unique-benefits': { BDC: 'Unique Selling Points', Airbnb: 'Other Things to Note' },
+  'area': { BDC: 'Location Description', Airbnb: 'The Neighborhood' },
+  'environment': { BDC: 'Surroundings', Airbnb: 'Getting Around' },
+  'remarks': { BDC: 'House Rules', Airbnb: 'House Rules', Expedia: 'Special Instructions' },
+  'fine-print': { BDC: 'Fine Print', Airbnb: 'House Rules (Additional)', Expedia: 'Policies' },
+  'house-manual': { BDC: 'House Manual', Airbnb: 'Guest Access' },
+  'headline': { BDC: 'Headline' },
+  'tips-of-the-owner': { BDC: 'Host Tips' },
+  'driving-directions': { BDC: 'Driving Directions' },
+  'distances': { BDC: 'Distances' },
+  'additional-costs': { BDC: 'Additional Costs' },
+  'arrival-days': { BDC: 'Arrival Days' },
+  'discounts': { BDC: 'Discounts' },
+  'minimum-stay-length': { BDC: 'Minimum Stay' },
+  'opening-hours': { BDC: 'Opening Hours' },
+  'optional-costs': { BDC: 'Optional Costs' },
+  'price-table': { BDC: 'Price Table' },
+  'short-winter-text': { BDC: 'Short Winter Description' },
+  'winter-text': { BDC: 'Winter Description' },
+  'why-this-property': { BDC: 'Why This Property' },
+};

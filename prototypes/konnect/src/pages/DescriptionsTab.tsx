@@ -10,13 +10,15 @@ import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import SaveIcon from '@mui/icons-material/Save';
 import SyncIcon from '@mui/icons-material/Sync';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import ChannelBadge from '../components/ChannelBadge';
 import CompositeCounter from '../components/CompositeCounter';
 import SyncConfirmDialog from '../components/SyncConfirmDialog';
-import { descriptionTypes, compositeLabels, BDC_COMPOSITE_LIMIT, AIRBNB_SUMMARY_LIMIT } from '../data/descriptionTypes';
+import CascadeDialog from '../components/CascadeDialog';
+import { descriptionTypes, AIRBNB_SUMMARY_LIMIT, channelFieldNames } from '../data/descriptionTypes';
 import { mockDescriptions, mockSyncStatus } from '../data/mockData';
-import { DescriptionEntry, DescriptionPriority, Channel } from '../types';
+import { DescriptionEntry, DescriptionPriority, Channel, RoomType } from '../types';
 import { colors } from '../theme';
 
 const priorityLabels: Record<DescriptionPriority, string> = {
@@ -32,11 +34,24 @@ const prioritySubtitles: Record<DescriptionPriority, string> = {
 };
 
 interface Props {
-  scopeKey: string; // propertyId or roomTypeId
+  scopeKey: string;
   propertyId: string;
+  isPropertyScope: boolean;
+  roomTypes?: RoomType[];
+  isDraft?: boolean;
+  onCascade?: (roomTypeIds: string[]) => void;
+  onClearDraft?: () => void;
 }
 
-export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
+export default function DescriptionsTab({
+  scopeKey,
+  propertyId,
+  isPropertyScope,
+  roomTypes,
+  isDraft,
+  onCascade,
+  onClearDraft,
+}: Props) {
   const initial = mockDescriptions[scopeKey] || [];
   const [entries, setEntries] = useState<Record<string, DescriptionEntry>>(() => {
     const map: Record<string, DescriptionEntry> = {};
@@ -47,6 +62,8 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
   const [savedPendingSync, setSavedPendingSync] = useState(false);
   const [syncDialogOpen, setSyncDialogOpen] = useState(false);
   const [syncSnackOpen, setSyncSnackOpen] = useState(false);
+  const [cascadeDialogOpen, setCascadeDialogOpen] = useState(false);
+  const [cascadeSnackOpen, setCascadeSnackOpen] = useState(false);
   const [startedWriting, setStartedWriting] = useState(false);
   const channels = mockSyncStatus[propertyId] || [];
 
@@ -69,7 +86,6 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
     setHasUnsavedChanges(true);
   };
 
-  // Compute BDC composite totals
   const compositeTotals = useMemo(() => {
     const totals: Record<string, number> = {
       welcome_message: 0,
@@ -85,8 +101,14 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
   }, [entries]);
 
   const handleSave = () => {
+    // Persist to mock data
+    const entryList = Object.values(entries).filter((e) => e.text.trim().length > 0);
+    mockDescriptions[scopeKey] = entryList;
     setHasUnsavedChanges(false);
     setSavedPendingSync(true);
+    if (isDraft && onClearDraft) {
+      onClearDraft();
+    }
   };
 
   const handleSync = () => {
@@ -95,7 +117,36 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
     setSyncSnackOpen(true);
   };
 
-  const isEmpty = !startedWriting && initial.length === 0 && Object.keys(entries).every((k) => !entries[k]?.text);
+  // Cascade: copy current entries to room types
+  const handleCascadeConfirm = (roomTypeIds: string[]) => {
+    const entryList = Object.values(entries).filter((e) => e.text.trim().length > 0);
+    const now = new Date().toISOString();
+    for (const rtId of roomTypeIds) {
+      mockDescriptions[rtId] = entryList.map((e) => ({
+        ...e,
+        lastModifiedAt: now,
+        lastModifiedBy: 'cascade',
+        lastSyncedAt: null,
+        lastSyncStatus: null,
+        isDirty: false,
+      }));
+    }
+    setCascadeDialogOpen(false);
+    setCascadeSnackOpen(true);
+    if (onCascade) onCascade(roomTypeIds);
+  };
+
+  const cascadeRoomTypes = useMemo(() => {
+    if (!roomTypes) return [];
+    return roomTypes.map((rt) => ({
+      id: rt.id,
+      name: rt.name,
+      hasExistingContent: (mockDescriptions[rt.id] || []).some((e) => e.text.trim().length > 0),
+    }));
+  }, [roomTypes]);
+
+  const isEmpty =
+    !startedWriting && initial.length === 0 && Object.keys(entries).every((k) => !entries[k]?.text);
 
   if (isEmpty) {
     return (
@@ -104,7 +155,8 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
           No descriptions authored yet
         </Typography>
         <Typography variant="body2" sx={{ color: colors.neutral[500], mb: 3 }}>
-          Start with the core types used by all channels: Property Description, House Rules, Fine Print, and Short Introduction.
+          Start with the core types used by all channels: Property Description, House Rules, Fine
+          Print, and Short Introduction.
         </Typography>
         <Button variant="contained" onClick={() => setStartedWriting(true)}>
           Start Writing
@@ -117,14 +169,51 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
 
   return (
     <Box>
+      {/* Draft / inherited banner — room-type scope only */}
+      {isDraft && !isPropertyScope && (
+        <Alert
+          severity="warning"
+          icon={false}
+          sx={{
+            mb: 2,
+            bgcolor: colors.orange[100],
+            border: `1px solid ${colors.orange[200]}`,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Chip
+              label="Draft"
+              size="small"
+              sx={{
+                bgcolor: colors.orange[300],
+                color: '#fff',
+                fontWeight: 700,
+                fontSize: '0.675rem',
+                height: 20,
+              }}
+            />
+            <Typography variant="body2" sx={{ color: colors.orange[600] }}>
+              Inherited from property — review and save to confirm
+            </Typography>
+          </Box>
+        </Alert>
+      )}
+
       {/* BDC Composite counters */}
-      <Card sx={{ mb: 3, bgcolor: colors.neutral[100], border: `1px solid ${colors.neutral[200]}` }}>
+      <Card
+        sx={{ mb: 3, bgcolor: colors.neutral[100], border: `1px solid ${colors.neutral[200]}` }}
+      >
         <CardContent sx={{ py: 2, '&:last-child': { pb: 2 } }}>
           <Typography variant="subtitle2" sx={{ mb: 1.5 }}>
             Booking Composite Message Limits
           </Typography>
           {Object.keys(compositeTotals).map((key) => (
-            <CompositeCounter key={key} compositeKey={key} totalChars={compositeTotals[key]} entries={entries} />
+            <CompositeCounter
+              key={key}
+              compositeKey={key}
+              totalChars={compositeTotals[key]}
+              entries={entries}
+            />
           ))}
         </CardContent>
       </Card>
@@ -150,6 +239,16 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
         </Alert>
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2, gap: 1 }}>
+          {isPropertyScope && roomTypes && roomTypes.length > 0 && (
+            <Button
+              variant="outlined"
+              startIcon={<AccountTreeIcon />}
+              onClick={() => setCascadeDialogOpen(true)}
+              disabled={Object.values(entries).filter((e) => e.text.trim().length > 0).length === 0}
+            >
+              Save & Apply to Room Types
+            </Button>
+          )}
           <Button
             variant="contained"
             startIcon={<SaveIcon />}
@@ -163,8 +262,6 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
 
       {groups.map((priority) => {
         const typesInGroup = descriptionTypes.filter((dt) => dt.priority === priority);
-        // Find which composites are in this group
-        const compositeKeys = [...new Set(typesInGroup.map((dt) => dt.bdcComposite).filter(Boolean))] as string[];
 
         return (
           <Box key={priority} sx={{ mb: 4 }}>
@@ -192,26 +289,6 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
               )}
             </Box>
 
-            {/* Show composite running total inline for this group */}
-            {compositeKeys.map((ck) => {
-              const total = compositeTotals[ck];
-              const pct = (total / BDC_COMPOSITE_LIMIT) * 100;
-              if (total === 0) return null;
-              return (
-                <Alert
-                  key={ck}
-                  severity={pct > 100 ? 'error' : pct > 90 ? 'warning' : 'info'}
-                  sx={{ mb: 1.5, py: 0 }}
-                >
-                  <Typography variant="caption" sx={{ fontWeight: 700 }}>
-                    {compositeLabels[ck]}: {total.toLocaleString()} / {BDC_COMPOSITE_LIMIT.toLocaleString()} chars
-                    {pct > 100 && ' — content will be truncated by Booking'}
-                    {pct > 90 && pct <= 100 && ' — approaching limit'}
-                  </Typography>
-                </Alert>
-              );
-            })}
-
             {typesInGroup.map((dt) => {
               const entry = entries[dt.typeCode];
               const text = entry?.text || '';
@@ -219,15 +296,26 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
               const isDirty = entry?.isDirty;
               const isAirbnbSummary = dt.typeCode === 'short-introduction';
               const airbnbWarning = isAirbnbSummary && charCount > AIRBNB_SUMMARY_LIMIT;
+              const fieldNames = channelFieldNames[dt.typeCode] || {};
 
               return (
                 <Card key={dt.typeCode} sx={{ mb: 2 }}>
                   <CardContent>
                     {/* Header row */}
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        mb: 1.5,
+                      }}
+                    >
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                         <Typography variant="subtitle2">{dt.label}</Typography>
-                        <Typography variant="caption" sx={{ color: colors.neutral[400], fontFamily: 'monospace' }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: colors.neutral[400], fontFamily: 'monospace' }}
+                        >
                           {dt.typeCode}
                         </Typography>
                         {isDirty && (
@@ -250,7 +338,11 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
                           }}
                         />
                         {dt.channels.map((ch: Channel) => (
-                          <ChannelBadge key={ch} channel={ch} />
+                          <ChannelBadge
+                            key={ch}
+                            channel={ch}
+                            fieldName={fieldNames[ch]}
+                          />
                         ))}
                       </Box>
                     </Box>
@@ -288,7 +380,10 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
 
                     {/* Last modified info */}
                     {entry?.lastModifiedBy && (
-                      <Typography variant="caption" sx={{ color: colors.neutral[400], display: 'block', mt: 0.5 }}>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: colors.neutral[400], display: 'block', mt: 0.5 }}
+                      >
                         Last edited by {entry.lastModifiedBy} on{' '}
                         {new Date(entry.lastModifiedAt).toLocaleDateString('en-US', {
                           month: 'short',
@@ -319,6 +414,26 @@ export default function DescriptionsTab({ scopeKey, propertyId }: Props) {
         message="Sync triggered. Descriptions are being pushed to enabled channels via NextPax."
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       />
+
+      {/* Cascade dialog + snackbar */}
+      {isPropertyScope && (
+        <>
+          <CascadeDialog
+            open={cascadeDialogOpen}
+            contentType="descriptions"
+            roomTypes={cascadeRoomTypes}
+            onConfirm={handleCascadeConfirm}
+            onClose={() => setCascadeDialogOpen(false)}
+          />
+          <Snackbar
+            open={cascadeSnackOpen}
+            autoHideDuration={4000}
+            onClose={() => setCascadeSnackOpen(false)}
+            message="Descriptions applied to room types as drafts. Review each room type to confirm."
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          />
+        </>
+      )}
     </Box>
   );
 }

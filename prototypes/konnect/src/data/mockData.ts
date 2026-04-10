@@ -6,9 +6,44 @@ export const properties: Property[] = [
     propertyName: 'Kasa 2nd Street Austin',
     nextpaxPropertyId: 'NP-456',
     roomTypes: [
-      { id: 'rt-001', name: 'Studio Suite' },
-      { id: 'rt-002', name: '1BR King' },
-      { id: 'rt-003', name: '2BR Suite' },
+      {
+        id: 'rt-001',
+        name: 'Studio Suite',
+        internalTitle: 'Studio Apartment A',
+        setupInfo: 'Studio',
+        maxOccupancy: 2,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-8847231' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
+      {
+        id: 'rt-002',
+        name: 'One Bedroom King',
+        internalTitle: '1BR King Suite B',
+        nickname: '1BR King',
+        setupInfo: '1BR King',
+        maxOccupancy: 4,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-8847232' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
+      {
+        id: 'rt-003',
+        name: 'Two Bedroom Suite',
+        internalTitle: '2BR Corner Suite C',
+        nickname: '2BR Suite',
+        setupInfo: '2BR Suite',
+        maxOccupancy: 6,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-8847233' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
     ],
   },
   {
@@ -16,8 +51,29 @@ export const properties: Property[] = [
     propertyName: 'Kasa Downtown Portland',
     nextpaxPropertyId: 'NP-789',
     roomTypes: [
-      { id: 'rt-004', name: 'Studio' },
-      { id: 'rt-005', name: '1BR Queen' },
+      {
+        id: 'rt-004',
+        name: 'Studio',
+        internalTitle: 'Pearl District Studio',
+        setupInfo: 'Studio',
+        maxOccupancy: 2,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-9912401' },
+          { channel: 'BDC', url: '#' },
+        ],
+      },
+      {
+        id: 'rt-005',
+        name: 'One Bedroom Queen',
+        internalTitle: '1BR Queen Suite',
+        nickname: '1BR Queen',
+        setupInfo: '1BR Queen',
+        maxOccupancy: 3,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-9912402' },
+          { channel: 'BDC', url: '#' },
+        ],
+      },
     ],
   },
   {
@@ -25,9 +81,76 @@ export const properties: Property[] = [
     propertyName: 'Kasa River North Chicago',
     nextpaxPropertyId: 'NP-012',
     roomTypes: [
-      { id: 'rt-006', name: 'Studio Suite' },
-      { id: 'rt-007', name: '1BR King' },
-      { id: 'rt-008', name: '2BR Penthouse' },
+      {
+        id: 'rt-006',
+        name: 'Studio Suite',
+        internalTitle: 'River North Studio A',
+        setupInfo: 'Studio',
+        maxOccupancy: 2,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-7723101' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
+      {
+        id: 'rt-007',
+        name: 'One Bedroom King',
+        internalTitle: '1BR King River View',
+        nickname: '1BR King',
+        setupInfo: '1BR King',
+        maxOccupancy: 4,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-7723102' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
+      {
+        id: 'rt-008',
+        name: 'Two Bedroom Penthouse',
+        internalTitle: '2BR Penthouse Suite',
+        nickname: '2BR Penthouse',
+        setupInfo: '2BR Penthouse',
+        maxOccupancy: 6,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-7723103' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
+    ],
+  },
+  {
+    propertyId: 'prop-999',
+    propertyName: 'Kasa Embarcadero San Francisco',
+    nextpaxPropertyId: 'NP-555',
+    roomTypes: [
+      {
+        id: 'rt-010',
+        name: 'Studio Bay View',
+        internalTitle: 'Studio Unit A — Bay Side',
+        setupInfo: 'Studio',
+        maxOccupancy: 2,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-5501001' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
+      {
+        id: 'rt-011',
+        name: 'One Bedroom King',
+        internalTitle: '1BR King — City View',
+        nickname: '1BR King',
+        setupInfo: '1BR King',
+        maxOccupancy: 4,
+        channelLinks: [
+          { channel: 'Airbnb', url: '#', listingId: 'ABB-5501002' },
+          { channel: 'BDC', url: '#' },
+          { channel: 'Expedia', url: '#' },
+        ],
+      },
     ],
   },
 ];
@@ -172,6 +295,54 @@ export const mockDescriptions: Record<string, DescriptionEntry[]> = {
     { typeCode: 'house', language: 'EN', text: 'The 2BR Penthouse is our flagship unit — a top-floor corner apartment with panoramic skyline views, two bedrooms, two full bathrooms, and a chef\'s kitchen. The wraparound windows and private balcony create an unforgettable Chicago experience.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-03-20T11:00:00Z', lastSyncedAt: '2026-03-20T11:05:00Z', lastSyncStatus: 'success' },
     { typeCode: 'short-introduction', language: 'EN', text: 'Top-floor penthouse with panoramic skyline views, 2 bedrooms, private balcony, and chef\'s kitchen in River North.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-03-20T11:00:00Z', lastSyncedAt: '2026-03-20T11:05:00Z', lastSyncStatus: 'success' },
     { typeCode: 'interior', language: 'EN', text: 'Corner unit with wraparound floor-to-ceiling windows. Primary bedroom with king bed and en-suite bathroom. Second bedroom with queen bed. Chef\'s kitchen with gas range, double oven, and wine cooler. Spacious living and dining area. Private balcony with skyline views. In-unit washer/dryer.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-03-20T11:00:00Z', lastSyncedAt: '2026-03-20T11:05:00Z', lastSyncStatus: 'success' },
+  ],
+  // — Kasa Embarcadero San Francisco — fully complete property —
+  'prop-999': [
+    { typeCode: 'house', language: 'EN', text: 'Welcome to Kasa Embarcadero San Francisco, a waterfront apartment community steps from the Ferry Building and the Bay Bridge. Our thoughtfully designed apartments feature modern furnishings, full kitchens, and floor-to-ceiling windows with stunning bay views. Ideal for both business travelers and vacationers exploring the City by the Bay.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'short-introduction', language: 'EN', text: 'Waterfront apartments on the Embarcadero with bay views, full kitchens, and smart home features. Steps from the Ferry Building and BART.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'interior', language: 'EN', text: 'Each apartment features warm hardwood floors, an open-concept living area with designer furniture, and a fully equipped kitchen with quartz countertops and stainless appliances. Large windows frame bay or city views. Smart locks, Nest thermostats, and high-speed WiFi throughout.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'unique-benefits', language: 'EN', text: 'Direct waterfront access along the Embarcadero promenade. Rooftop terrace with panoramic bay and bridge views. On-site fitness center and co-working lounge. Contactless smart lock check-in. Complimentary high-speed WiFi and streaming TV.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'area', language: 'EN', text: 'The Embarcadero is San Francisco\'s premier waterfront district. Walk to the Ferry Building Marketplace (3 min), Oracle Park (10 min), Fisherman\'s Wharf (20 min), and the Financial District (5 min). Embarcadero BART station is a 2-minute walk. Cable car stops nearby.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'environment', language: 'EN', text: 'Situated on the waterfront with views of the Bay Bridge and Treasure Island. The Embarcadero promenade is perfect for morning jogs or evening strolls. The neighborhood is walkable, bike-friendly with Bay Wheels stations, and well-served by Muni and BART.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'remarks', language: 'EN', text: 'Check-in: 4:00 PM | Check-out: 11:00 AM. No smoking on the property. No parties or events. Quiet hours 10 PM – 8 AM. Maximum occupancy must be respected. Pets allowed with prior approval and $50 pet fee per stay.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'fine-print', language: 'EN', text: 'Government-issued photo ID required at check-in. A $250 security deposit hold is placed on the credit card at booking and released within 7 business days after checkout. Free cancellation up to 48 hours before check-in. SF hotel tax included in the nightly rate.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'house-manual', language: 'EN', text: 'Smart lock code is sent 24 hours before arrival. WiFi: KasaGuest — password on the welcome card. Thermostat is a Nest — set to 68°F when leaving. Trash room is at the end of each hallway. Recycling and compost bins in the garage. Building concierge available 7 AM – 10 PM.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'headline', language: 'EN', text: 'Waterfront apartments with bay views on the Embarcadero', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'tips-of-the-owner', language: 'EN', text: 'Saturday mornings at the Ferry Building farmers market are a must. For the best clam chowder, skip Fisherman\'s Wharf and go to Hog Island Oyster Co. inside the Ferry Building. Rent bikes from Bay Wheels and ride across the Golden Gate Bridge. For coffee, try Blue Bottle on the Embarcadero.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'driving-directions', language: 'EN', text: 'From SFO: Take US-101 North to I-80 West, exit at Fremont St. Turn right on Folsom, left on Embarcadero. From Oakland (via Bay Bridge): Exit at Fremont St, turn right to Embarcadero. Parking garage on-site, $35/night.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'distances', language: 'EN', text: 'Ferry Building: 200m. BART Embarcadero Station: 150m. Oracle Park: 1km. Fisherman\'s Wharf: 2.5km. Chinatown: 1km. Union Square: 1.2km. Golden Gate Bridge: 8km. SFO Airport: 21km. Oakland Airport: 24km.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'additional-costs', language: 'EN', text: 'Pet fee: $50 per stay. Parking: $35/night in on-site garage. Early check-in (before 2 PM): $40 if available. Late check-out (after 1 PM): $40 if available.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'arrival-days', language: 'EN', text: 'Arrivals accepted any day. Check-in: 4:00 PM. Early check-in available upon request.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'discounts', language: 'EN', text: 'Weekly stays (7+ nights): 12% discount. Monthly stays (28+ nights): 22% discount. Both applied automatically at booking.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'minimum-stay-length', language: 'EN', text: 'Minimum stay: 2 nights. Holiday weekends and special events: 3-night minimum.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'opening-hours', language: 'EN', text: 'Concierge: 7 AM – 10 PM. Rooftop terrace: 7 AM – 10 PM. Fitness center: 24/7. Co-working lounge: 6 AM – 11 PM.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'optional-costs', language: 'EN', text: 'Mid-stay cleaning: $75 (stays of 5+ nights). Extra towel set: $10. Pack-and-play crib: complimentary upon request.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'price-table', language: 'EN', text: 'Rates vary by season. Studios from $179/night. 1BR Kings from $229/night. Weekly and monthly discounts available. See listing for current pricing.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'short-winter-text', language: 'EN', text: 'San Francisco\'s mild winters make the Embarcadero perfect year-round. Enjoy fog-free bay views and holiday lights along the waterfront.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'winter-text', language: 'EN', text: 'Winter in San Francisco is the city\'s best-kept secret. Mild temperatures, fewer crowds, and holiday festivities make it an ideal time to visit. The Ferry Building hosts holiday markets, and the waterfront is festive with lights. Union Square ice rink is a short walk away.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'why-this-property', language: 'EN', text: 'Unbeatable waterfront location on the Embarcadero. Bay views from every unit. Steps from BART and the Ferry Building. Rooftop terrace with panoramic views. Full kitchens and smart home features.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T10:00:00Z', lastSyncedAt: '2026-04-01T10:05:00Z', lastSyncStatus: 'success' },
+  ],
+  'rt-010': [
+    { typeCode: 'house', language: 'EN', text: 'The Studio Bay View is a compact yet elegant open-plan apartment with a queen bed, sitting area, and fully equipped kitchenette. Floor-to-ceiling windows frame stunning bay and bridge views. Perfect for solo travelers or couples.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'short-introduction', language: 'EN', text: 'Waterfront studio with bay views, queen bed, kitchenette, and smart home features on the Embarcadero.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'interior', language: 'EN', text: 'Open-concept layout with hardwood floors and oversized windows. Queen bed with premium linens, a compact living area with loveseat and smart TV, and a kitchenette with microwave, mini-fridge, coffee maker, and basic cookware. Modern bathroom with walk-in rainfall shower.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'unique-benefits', language: 'EN', text: 'Direct bay views from the bed. Smart lock and Nest thermostat. Access to rooftop terrace and fitness center. Steps from Ferry Building and BART.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'area', language: 'EN', text: 'Waterfront location on the Embarcadero. Ferry Building (3 min walk), BART (2 min), Financial District (5 min), Oracle Park (10 min).', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'environment', language: 'EN', text: 'Bay-facing unit with views of the Bay Bridge and water. The Embarcadero promenade is right outside for walks and runs.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'remarks', language: 'EN', text: 'Check-in: 4:00 PM | Check-out: 11:00 AM. No smoking. No parties. Quiet hours 10 PM – 8 AM. Max 2 guests.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'fine-print', language: 'EN', text: 'Photo ID required. $250 security hold released after checkout. Free cancellation up to 48 hours before arrival.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'house-manual', language: 'EN', text: 'Smart lock code sent 24 hours before arrival. WiFi: KasaGuest. Trash chute at end of hallway. Concierge 7 AM – 10 PM.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+  ],
+  'rt-011': [
+    { typeCode: 'house', language: 'EN', text: 'The 1BR King features a separate bedroom with a plush king bed, a spacious living area with city views, and a full kitchen with premium appliances. In-unit washer/dryer and smart home controls throughout. Ideal for couples or business travelers on extended stays.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'short-introduction', language: 'EN', text: 'Spacious 1BR with king bed, full kitchen, city views, and in-unit laundry on the Embarcadero. Steps from BART.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'interior', language: 'EN', text: 'Separate bedroom with king bed, blackout curtains, and walk-in closet. Living room with sectional sofa, work desk, and 55" smart TV. Full kitchen with quartz countertops, dishwasher, oven, and all cooking essentials. In-unit washer/dryer.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'unique-benefits', language: 'EN', text: 'Separate bedroom for privacy. Full kitchen for extended stays. In-unit laundry. Smart home controls. Rooftop terrace and fitness center access.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'area', language: 'EN', text: 'Embarcadero waterfront. Ferry Building (3 min), BART (2 min), Financial District (5 min), Oracle Park (10 min), Union Square (12 min).', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'environment', language: 'EN', text: 'City-view unit overlooking the Financial District skyline. The bustling Embarcadero is at your doorstep. Walkable and bike-friendly neighborhood.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'remarks', language: 'EN', text: 'Check-in: 4:00 PM | Check-out: 11:00 AM. No smoking. No parties. Quiet hours 10 PM – 8 AM. Max 4 guests. Pets with approval.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'fine-print', language: 'EN', text: 'Photo ID required. $250 security hold. Free cancellation up to 48 hours before arrival. SF hotel tax included.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
+    { typeCode: 'house-manual', language: 'EN', text: 'Smart lock code sent before arrival. WiFi: KasaGuest. Washer/dryer pods in the cabinet above. Trash chute end of hallway. Concierge 7 AM – 10 PM.', lastModifiedBy: 'mel.baker@kasa.com', lastModifiedAt: '2026-04-01T11:00:00Z', lastSyncedAt: '2026-04-01T11:05:00Z', lastSyncStatus: 'success' },
   ],
 };
 
@@ -575,10 +746,77 @@ export const mockPropertyAmenities: Record<string, AmenityEntry[]> = {
     { typeCode: 'W01', attributes: [] },
     { typeCode: 'D08', attributes: [] },
   ],
+  // — Kasa Embarcadero San Francisco (prop-999) — fully loaded —
+  'prop-999': [
+    { typeCode: 'B02', attributes: ['1'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'G02', attributes: ['1'] },
+    { typeCode: 'E11', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'B01', attributes: ['1'] },
+    { typeCode: 'T07', attributes: ['1'] },
+    { typeCode: 'C34', attributes: [] },
+    { typeCode: 'C35', attributes: [] },
+    { typeCode: 'C36', attributes: [] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['Y'] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'A22', attributes: ['Y'] },
+    { typeCode: 'P06', attributes: ['42'] },
+    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'E01', attributes: [] },
+    { typeCode: 'C66', attributes: [] },
+    { typeCode: 'D08', attributes: [] },
+  ],
+  'rt-010': [
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'E11', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'W07', attributes: ['Y'] },
+    { typeCode: 'A22', attributes: ['Y'] },
+    { typeCode: 'W01', attributes: [] },
+  ],
+  'rt-011': [
+    { typeCode: 'B02', attributes: ['1'] },
+    { typeCode: 'B17', attributes: ['1'] },
+    { typeCode: 'G02', attributes: ['1'] },
+    { typeCode: 'B18', attributes: [] },
+    { typeCode: 'E11', attributes: [] },
+    { typeCode: 'A18', attributes: [] },
+    { typeCode: 'A44', attributes: ['P'] },
+    { typeCode: 'D06', attributes: ['W'] },
+    { typeCode: 'H41', attributes: [] },
+    { typeCode: 'B30', attributes: [] },
+    { typeCode: 'B01', attributes: ['1'] },
+    { typeCode: 'K04', attributes: [] },
+    { typeCode: 'M02', attributes: [] },
+    { typeCode: 'F04', attributes: ['Y'] },
+    { typeCode: 'W07', attributes: ['Y'] },
+  ],
 };
 
 export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
   'prop-123': [
+    {
+      channelId: 'AIR298',
+      channelName: 'Airbnb',
+      enabled: true,
+      contentEnabled: true,
+      lastSyncAt: '2026-03-15T09:00:00Z',
+      lastSyncStatus: 'success',
+    },
     {
       channelId: 'BOO142',
       channelName: 'Booking.com',
@@ -597,16 +835,16 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
       lastSyncAt: null,
       lastSyncStatus: null,
     },
+  ],
+  'prop-789': [
     {
-      channelId: 'AIR298',
+      channelId: 'AIR300',
       channelName: 'Airbnb',
       enabled: true,
       contentEnabled: true,
-      lastSyncAt: '2026-03-15T09:00:00Z',
+      lastSyncAt: '2026-03-20T10:10:00Z',
       lastSyncStatus: 'success',
     },
-  ],
-  'prop-789': [
     {
       channelId: 'BOO144',
       channelName: 'Booking.com',
@@ -623,16 +861,16 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
       lastSyncAt: '2026-03-20T10:10:00Z',
       lastSyncStatus: 'success',
     },
+  ],
+  'prop-456': [
     {
-      channelId: 'AIR300',
+      channelId: 'AIR299',
       channelName: 'Airbnb',
       enabled: true,
       contentEnabled: true,
-      lastSyncAt: '2026-03-20T10:10:00Z',
+      lastSyncAt: '2026-03-14T12:00:00Z',
       lastSyncStatus: 'success',
     },
-  ],
-  'prop-456': [
     {
       channelId: 'BOO143',
       channelName: 'Booking.com',
@@ -651,12 +889,30 @@ export const mockSyncStatus: Record<string, ChannelSyncStatus[]> = {
       lastSyncAt: null,
       lastSyncStatus: null,
     },
+  ],
+  'prop-999': [
     {
-      channelId: 'AIR299',
+      channelId: 'AIR400',
       channelName: 'Airbnb',
       enabled: true,
       contentEnabled: true,
-      lastSyncAt: '2026-03-14T12:00:00Z',
+      lastSyncAt: '2026-04-01T10:05:00Z',
+      lastSyncStatus: 'success',
+    },
+    {
+      channelId: 'BOO200',
+      channelName: 'Booking.com',
+      enabled: true,
+      contentEnabled: true,
+      lastSyncAt: '2026-04-01T10:05:00Z',
+      lastSyncStatus: 'success',
+    },
+    {
+      channelId: 'EXP350',
+      channelName: 'Expedia',
+      enabled: true,
+      contentEnabled: true,
+      lastSyncAt: '2026-04-01T10:05:00Z',
       lastSyncStatus: 'success',
     },
   ],
@@ -680,5 +936,101 @@ export const mockSyncLog: Record<string, SyncLogEntry[]> = {
     { id: 'log-10', timestamp: '2026-03-20T10:08:00Z', operator: 'mel.baker@kasa.com', contentType: 'amenities', channel: 'Booking.com', result: 'success', nextpaxRequestId: 'NPX-2026-0320-004' },
     { id: 'log-11', timestamp: '2026-03-20T10:08:00Z', operator: 'mel.baker@kasa.com', contentType: 'amenities', channel: 'Expedia', result: 'success', nextpaxRequestId: 'NPX-2026-0320-005' },
     { id: 'log-12', timestamp: '2026-03-20T10:08:00Z', operator: 'mel.baker@kasa.com', contentType: 'amenities', channel: 'Airbnb', result: 'success', nextpaxRequestId: 'NPX-2026-0320-006' },
+  ],
+  'prop-999': [
+    { id: 'log-13', timestamp: '2026-04-01T10:05:00Z', operator: 'mel.baker@kasa.com', contentType: 'descriptions', channel: 'Booking.com', result: 'success', nextpaxRequestId: 'NPX-2026-0401-001' },
+    { id: 'log-14', timestamp: '2026-04-01T10:05:00Z', operator: 'mel.baker@kasa.com', contentType: 'descriptions', channel: 'Expedia', result: 'success', nextpaxRequestId: 'NPX-2026-0401-002' },
+    { id: 'log-15', timestamp: '2026-04-01T10:05:00Z', operator: 'mel.baker@kasa.com', contentType: 'descriptions', channel: 'Airbnb', result: 'success', nextpaxRequestId: 'NPX-2026-0401-003' },
+    { id: 'log-16', timestamp: '2026-04-01T10:03:00Z', operator: 'mel.baker@kasa.com', contentType: 'amenities', channel: 'Booking.com', result: 'success', nextpaxRequestId: 'NPX-2026-0401-004' },
+    { id: 'log-17', timestamp: '2026-04-01T10:03:00Z', operator: 'mel.baker@kasa.com', contentType: 'amenities', channel: 'Expedia', result: 'success', nextpaxRequestId: 'NPX-2026-0401-005' },
+    { id: 'log-18', timestamp: '2026-04-01T10:03:00Z', operator: 'mel.baker@kasa.com', contentType: 'amenities', channel: 'Airbnb', result: 'success', nextpaxRequestId: 'NPX-2026-0401-006' },
+  ],
+};
+
+// ─── Photos (sourced from Contentful, ordering managed in Konnect) ───────────
+
+export interface MockPhoto {
+  id: string;
+  imageType: string;
+  imageTypeLabel: string;
+  caption: string;
+  priority: number;
+  lastUpdated: string;
+  contentfulId: string;
+  color: string; // gradient for placeholder
+}
+
+const photoColor: Record<string, string> = {
+  'exterior': 'linear-gradient(135deg, #8BA4B8, #5A7D9A)',
+  'living-room': 'linear-gradient(135deg, #C4A882, #A08060)',
+  'bedroom': 'linear-gradient(135deg, #9B8EC4, #7B6FA4)',
+  'kitchen': 'linear-gradient(135deg, #7DB88E, #5A9A6C)',
+  'bathroom': 'linear-gradient(135deg, #7BC8C4, #5AA8A4)',
+  'building': 'linear-gradient(135deg, #8E99A4, #6B7B8A)',
+  'view': 'linear-gradient(135deg, #88B4D8, #6898BC)',
+  'pool': 'linear-gradient(135deg, #6CB4D8, #4A98BC)',
+  'amenity': 'linear-gradient(135deg, #B8A88B, #9A8060)',
+};
+
+function ph(id: string, type: string, label: string, caption: string, priority: number, date: string, cId: string): MockPhoto {
+  return { id, imageType: type, imageTypeLabel: label, caption, priority, lastUpdated: date, contentfulId: cId, color: photoColor[type] || photoColor['building'] };
+}
+
+export const mockPhotos: Record<string, MockPhoto[]> = {
+  'prop-123': [
+    ph('ph-1', 'exterior', 'Exterior', 'Building facade from 2nd Street', 0, '2026-03-01T10:00:00Z', 'ctfl-a1b2c3'),
+    ph('ph-2', 'exterior', 'Exterior', 'Evening view with downtown skyline', 1, '2026-03-01T10:00:00Z', 'ctfl-a1b2c4'),
+    ph('ph-3', 'pool', 'Pool', 'Rooftop pool and lounge area', 2, '2026-03-01T10:00:00Z', 'ctfl-a1b2c5'),
+    ph('ph-4', 'living-room', 'Living Room', 'Open-concept living area with city views', 3, '2026-03-01T10:00:00Z', 'ctfl-a1b2c6'),
+    ph('ph-5', 'living-room', 'Living Room', 'Workspace nook by the window', 4, '2026-03-01T10:00:00Z', 'ctfl-a1b2c7'),
+    ph('ph-6', 'bedroom', 'Bedroom', 'King bed with luxury linens', 5, '2026-02-15T10:00:00Z', 'ctfl-a1b2c8'),
+    ph('ph-7', 'bedroom', 'Bedroom', 'Bedroom with blackout curtains', 6, '2026-02-15T10:00:00Z', 'ctfl-a1b2c9'),
+    ph('ph-8', 'kitchen', 'Kitchen', 'Full kitchen with stainless appliances', 7, '2026-02-15T10:00:00Z', 'ctfl-a1b2d0'),
+    ph('ph-9', 'bathroom', 'Bathroom', 'Walk-in rainfall shower', 8, '2026-02-15T10:00:00Z', 'ctfl-a1b2d1'),
+    ph('ph-10', 'view', 'View', 'Lady Bird Lake from the balcony', 9, '2026-02-15T10:00:00Z', 'ctfl-a1b2d2'),
+    ph('ph-11', 'building', 'Building', 'Lobby and concierge area', 10, '2026-02-15T10:00:00Z', 'ctfl-a1b2d3'),
+    ph('ph-12', 'amenity', 'Amenity Area', 'Fitness center', 11, '2026-02-15T10:00:00Z', 'ctfl-a1b2d4'),
+  ],
+  'rt-001': [
+    ph('ph-20', 'bedroom', 'Bedroom', 'Queen bed in Studio Suite', 0, '2026-03-05T10:00:00Z', 'ctfl-s1a1'),
+    ph('ph-21', 'living-room', 'Living Room', 'Sitting area with city view', 1, '2026-03-05T10:00:00Z', 'ctfl-s1a2'),
+    ph('ph-22', 'kitchen', 'Kitchen', 'Kitchenette with microwave and fridge', 2, '2026-03-05T10:00:00Z', 'ctfl-s1a3'),
+    ph('ph-23', 'bathroom', 'Bathroom', 'Modern bathroom with walk-in shower', 3, '2026-03-05T10:00:00Z', 'ctfl-s1a4'),
+    ph('ph-24', 'view', 'View', 'Partial city view from the studio', 4, '2026-03-05T10:00:00Z', 'ctfl-s1a5'),
+  ],
+  'rt-002': [
+    ph('ph-30', 'bedroom', 'Bedroom', 'King bed with river view', 0, '2026-03-05T10:00:00Z', 'ctfl-k1a1'),
+    ph('ph-31', 'living-room', 'Living Room', 'Spacious living area', 1, '2026-03-05T10:00:00Z', 'ctfl-k1a2'),
+    ph('ph-32', 'kitchen', 'Kitchen', 'Full kitchen with island', 2, '2026-03-05T10:00:00Z', 'ctfl-k1a3'),
+    ph('ph-33', 'bathroom', 'Bathroom', 'En-suite bathroom', 3, '2026-03-05T10:00:00Z', 'ctfl-k1a4'),
+    ph('ph-34', 'living-room', 'Living Room', 'Work desk area', 4, '2026-03-05T10:00:00Z', 'ctfl-k1a5'),
+    ph('ph-35', 'view', 'View', 'Downtown Austin skyline', 5, '2026-03-05T10:00:00Z', 'ctfl-k1a6'),
+  ],
+  'prop-999': [
+    ph('ph-40', 'exterior', 'Exterior', 'Embarcadero waterfront facade', 0, '2026-04-01T10:00:00Z', 'ctfl-sf01'),
+    ph('ph-41', 'exterior', 'Exterior', 'Building entrance at sunset', 1, '2026-04-01T10:00:00Z', 'ctfl-sf02'),
+    ph('ph-42', 'view', 'View', 'Bay Bridge panorama from rooftop', 2, '2026-04-01T10:00:00Z', 'ctfl-sf03'),
+    ph('ph-43', 'living-room', 'Living Room', 'Bay-view living area', 3, '2026-04-01T10:00:00Z', 'ctfl-sf04'),
+    ph('ph-44', 'bedroom', 'Bedroom', 'King bed facing the bay', 4, '2026-04-01T10:00:00Z', 'ctfl-sf05'),
+    ph('ph-45', 'bedroom', 'Bedroom', 'Guest bedroom with city view', 5, '2026-04-01T10:00:00Z', 'ctfl-sf06'),
+    ph('ph-46', 'kitchen', 'Kitchen', 'Chef\'s kitchen with quartz counters', 6, '2026-04-01T10:00:00Z', 'ctfl-sf07'),
+    ph('ph-47', 'bathroom', 'Bathroom', 'Spa bathroom with soaking tub', 7, '2026-04-01T10:00:00Z', 'ctfl-sf08'),
+    ph('ph-48', 'pool', 'Pool', 'Rooftop terrace with bay views', 8, '2026-04-01T10:00:00Z', 'ctfl-sf09'),
+    ph('ph-49', 'building', 'Building', 'Co-working lounge', 9, '2026-04-01T10:00:00Z', 'ctfl-sf10'),
+  ],
+  'rt-010': [
+    ph('ph-50', 'bedroom', 'Bedroom', 'Queen bed with bay view', 0, '2026-04-01T11:00:00Z', 'ctfl-sfr1'),
+    ph('ph-51', 'living-room', 'Living Room', 'Compact sitting area', 1, '2026-04-01T11:00:00Z', 'ctfl-sfr2'),
+    ph('ph-52', 'kitchen', 'Kitchen', 'Kitchenette with coffee station', 2, '2026-04-01T11:00:00Z', 'ctfl-sfr3'),
+    ph('ph-53', 'bathroom', 'Bathroom', 'Rainfall shower', 3, '2026-04-01T11:00:00Z', 'ctfl-sfr4'),
+    ph('ph-54', 'view', 'View', 'Bay Bridge from the bed', 4, '2026-04-01T11:00:00Z', 'ctfl-sfr5'),
+  ],
+  'rt-011': [
+    ph('ph-60', 'bedroom', 'Bedroom', 'King bed with city skyline', 0, '2026-04-01T11:00:00Z', 'ctfl-sfr6'),
+    ph('ph-61', 'living-room', 'Living Room', 'Living room with sectional', 1, '2026-04-01T11:00:00Z', 'ctfl-sfr7'),
+    ph('ph-62', 'kitchen', 'Kitchen', 'Full kitchen with dishwasher', 2, '2026-04-01T11:00:00Z', 'ctfl-sfr8'),
+    ph('ph-63', 'bathroom', 'Bathroom', 'Double vanity bathroom', 3, '2026-04-01T11:00:00Z', 'ctfl-sfr9'),
+    ph('ph-64', 'view', 'View', 'Financial District skyline', 4, '2026-04-01T11:00:00Z', 'ctfl-sfr10'),
+    ph('ph-65', 'living-room', 'Living Room', 'Dedicated work desk', 5, '2026-04-01T11:00:00Z', 'ctfl-sfr11'),
   ],
 };

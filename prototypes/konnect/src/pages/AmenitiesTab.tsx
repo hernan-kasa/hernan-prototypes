@@ -20,23 +20,38 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SaveIcon from '@mui/icons-material/Save';
 import SyncIcon from '@mui/icons-material/Sync';
 import SearchIcon from '@mui/icons-material/Search';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import SyncConfirmDialog from '../components/SyncConfirmDialog';
+import CascadeDialog from '../components/CascadeDialog';
 import { amenityTypes, AMENITY_CATEGORIES, AmenityType, amenityCategoryMap } from '../data/amenityTypes';
 import { mockPropertyAmenities, mockSyncStatus } from '../data/mockData';
+import { RoomType } from '../types';
 import { colors } from '../theme';
 
 interface Props {
   scopeKey: string;
   propertyId: string;
+  isPropertyScope: boolean;
+  roomTypes?: RoomType[];
+  isDraft?: boolean;
+  onCascade?: (roomTypeIds: string[]) => void;
+  onClearDraft?: () => void;
 }
 
-// Local UI state per amenity — derived from the { typeCode, attributes } API shape
 interface AmenityState {
   enabled: boolean;
-  attributes: string[]; // mirrors NextPax shape
+  attributes: string[];
 }
 
-export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
+export default function AmenitiesTab({
+  scopeKey,
+  propertyId,
+  isPropertyScope,
+  roomTypes,
+  isDraft,
+  onCascade,
+  onClearDraft,
+}: Props) {
   const [amenityState, setAmenityState] = useState<Record<string, AmenityState>>(() => {
     const state: Record<string, AmenityState> = {};
     const scopeAmenities = mockPropertyAmenities[scopeKey] || [];
@@ -44,9 +59,10 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
 
     amenityTypes.forEach((at) => {
       const attrs = enabledMap.get(at.code);
-      state[at.code] = attrs !== undefined
-        ? { enabled: true, attributes: [...attrs] }
-        : { enabled: false, attributes: [] };
+      state[at.code] =
+        attrs !== undefined
+          ? { enabled: true, attributes: [...attrs] }
+          : { enabled: false, attributes: [] };
     });
     return state;
   });
@@ -55,6 +71,8 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
   const [savedPendingSync, setSavedPendingSync] = useState(false);
   const [syncDialogOpen, setSyncDialogOpen] = useState(false);
   const [syncSnackOpen, setSyncSnackOpen] = useState(false);
+  const [cascadeDialogOpen, setCascadeDialogOpen] = useState(false);
+  const [cascadeSnackOpen, setCascadeSnackOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const channels = mockSyncStatus[propertyId] || [];
   const [showEnabledOnly, setShowEnabledOnly] = useState(false);
@@ -101,8 +119,16 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
   };
 
   const handleSave = () => {
+    // Persist to mock data
+    const enabledEntries = Object.entries(amenityState)
+      .filter(([, s]) => s.enabled)
+      .map(([code, s]) => ({ typeCode: code, attributes: s.attributes }));
+    mockPropertyAmenities[scopeKey] = enabledEntries;
     setHasUnsavedChanges(false);
     setSavedPendingSync(true);
+    if (isDraft && onClearDraft) {
+      onClearDraft();
+    }
   };
 
   const handleSync = () => {
@@ -111,37 +137,81 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
     setSyncSnackOpen(true);
   };
 
+  // Cascade: copy current amenity state to room types
+  const handleCascadeConfirm = (roomTypeIds: string[]) => {
+    const enabledEntries = Object.entries(amenityState)
+      .filter(([, s]) => s.enabled)
+      .map(([code, s]) => ({ typeCode: code, attributes: [...s.attributes] }));
+    for (const rtId of roomTypeIds) {
+      mockPropertyAmenities[rtId] = enabledEntries.map((e) => ({ ...e }));
+    }
+    setCascadeDialogOpen(false);
+    setCascadeSnackOpen(true);
+    if (onCascade) onCascade(roomTypeIds);
+  };
+
+  const cascadeRoomTypes = useMemo(() => {
+    if (!roomTypes) return [];
+    return roomTypes.map((rt) => ({
+      id: rt.id,
+      name: rt.name,
+      hasExistingContent: (mockPropertyAmenities[rt.id] || []).length > 0,
+    }));
+  }, [roomTypes]);
+
   const enabledCount = Object.values(amenityState).filter((s) => s.enabled).length;
 
   return (
     <Box>
-      {/* Summary + search bar */}
-      <Card sx={{ mb: 3, bgcolor: colors.neutral[100], border: `1px solid ${colors.neutral[200]}` }}>
-        <CardContent sx={{ py: 2, '&:last-child': { pb: 2 } }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: savedPendingSync && !hasUnsavedChanges ? 0 : 2 }}>
-            <Box>
-              <Typography variant="subtitle2">
-                {enabledCount} amenities enabled out of {amenityTypes.length}
-              </Typography>
-              <Typography variant="caption" sx={{ color: colors.neutral[500] }}>
-                Source: NextPax Supply API · {AMENITY_CATEGORIES.length} categories · Shape: {'{ typeCode, attributes[] }'}
-              </Typography>
-            </Box>
-            {!(savedPendingSync && !hasUnsavedChanges) && (
-              <Button
-                variant="contained"
-                startIcon={<SaveIcon />}
-                onClick={handleSave}
-                disabled={!hasUnsavedChanges}
-              >
-                Save Amenities
-              </Button>
-            )}
+      {/* Draft / inherited banner — room-type scope only */}
+      {isDraft && !isPropertyScope && (
+        <Alert
+          severity="warning"
+          icon={false}
+          sx={{
+            mb: 2,
+            bgcolor: colors.orange[100],
+            border: `1px solid ${colors.orange[200]}`,
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Chip
+              label="Draft"
+              size="small"
+              sx={{
+                bgcolor: colors.orange[300],
+                color: '#fff',
+                fontWeight: 700,
+                fontSize: '0.675rem',
+                height: 20,
+              }}
+            />
+            <Typography variant="body2" sx={{ color: colors.orange[600] }}>
+              Inherited from property — review and save to confirm
+            </Typography>
           </Box>
+        </Alert>
+      )}
+
+      {/* Summary + search bar */}
+      <Card
+        sx={{ mb: 3, bgcolor: colors.neutral[100], border: `1px solid ${colors.neutral[200]}` }}
+      >
+        <CardContent sx={{ py: 2, '&:last-child': { pb: 2 } }}>
+          <Box sx={{ mb: 1.5 }}>
+            <Typography variant="subtitle2">
+              {enabledCount} amenities enabled out of {amenityTypes.length}
+            </Typography>
+            <Typography variant="caption" sx={{ color: colors.neutral[500] }}>
+              Source: NextPax Supply API · {AMENITY_CATEGORIES.length} categories · Shape:{' '}
+              {'{ typeCode, attributes[] }'}
+            </Typography>
+          </Box>
+
           {savedPendingSync && !hasUnsavedChanges && (
             <Alert
               severity="success"
-              sx={{ mt: 2 }}
+              sx={{ mb: 1.5 }}
               action={
                 <Button
                   color="inherit"
@@ -180,7 +250,10 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
                 sx={{ flex: 1, fontSize: '0.8rem', color: colors.neutral[700] }}
               />
               {searchQuery && (
-                <Typography variant="caption" sx={{ color: colors.neutral[400], ml: 1, whiteSpace: 'nowrap' }}>
+                <Typography
+                  variant="caption"
+                  sx={{ color: colors.neutral[400], ml: 1, whiteSpace: 'nowrap' }}
+                >
                   {filteredAmenities.length} results
                 </Typography>
               )}
@@ -194,10 +267,38 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
                 fontSize: '0.75rem',
                 bgcolor: showEnabledOnly ? colors.blue[400] : colors.neutral[200],
                 color: showEnabledOnly ? '#fff' : colors.neutral[600],
-                '&:hover': { bgcolor: showEnabledOnly ? colors.blue[400] : colors.neutral[300] },
+                '&:hover': {
+                  bgcolor: showEnabledOnly ? colors.blue[400] : colors.neutral[300],
+                },
               }}
             />
           </Box>
+
+          {/* Action buttons */}
+          {!(savedPendingSync && !hasUnsavedChanges) && (
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 1.5 }}>
+              {isPropertyScope && roomTypes && roomTypes.length > 0 && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<AccountTreeIcon />}
+                  onClick={() => setCascadeDialogOpen(true)}
+                  disabled={enabledCount === 0}
+                >
+                  Save & Apply to Room Types
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<SaveIcon />}
+                onClick={handleSave}
+                disabled={!hasUnsavedChanges}
+              >
+                Save Amenities
+              </Button>
+            </Box>
+          )}
         </CardContent>
       </Card>
 
@@ -264,10 +365,16 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
                     />
                     <Box sx={{ flex: 1, ml: 1, minWidth: 0 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                        <Typography variant="body2" sx={{ fontWeight: state.enabled ? 500 : 400 }}>
+                        <Typography
+                          variant="body2"
+                          sx={{ fontWeight: state.enabled ? 500 : 400 }}
+                        >
                           {amenity.names.en}
                         </Typography>
-                        <Typography variant="caption" sx={{ color: colors.neutral[400], fontFamily: 'monospace' }}>
+                        <Typography
+                          variant="caption"
+                          sx={{ color: colors.neutral[400], fontFamily: 'monospace' }}
+                        >
                           {amenity.code}
                         </Typography>
                       </Box>
@@ -310,11 +417,30 @@ export default function AmenitiesTab({ scopeKey, propertyId }: Props) {
         message="Sync triggered. Amenities are being pushed to enabled channels via NextPax."
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       />
+
+      {/* Cascade dialog + snackbar */}
+      {isPropertyScope && (
+        <>
+          <CascadeDialog
+            open={cascadeDialogOpen}
+            contentType="amenities"
+            roomTypes={cascadeRoomTypes}
+            onConfirm={handleCascadeConfirm}
+            onClose={() => setCascadeDialogOpen(false)}
+          />
+          <Snackbar
+            open={cascadeSnackOpen}
+            autoHideDuration={4000}
+            onClose={() => setCascadeSnackOpen(false)}
+            message="Amenities applied to room types as drafts. Review each room type to confirm."
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          />
+        </>
+      )}
     </Box>
   );
 }
 
-// Renders the right input control based on codeType, working with the attributes[] shape
 function AmenityAttributeInput({
   amenity,
   attributes,
@@ -325,7 +451,7 @@ function AmenityAttributeInput({
   onChange: (attrs: string[]) => void;
 }) {
   if (amenity.codeType === 'boolean') {
-    return null; // toggle IS the input — attributes stays []
+    return null;
   }
 
   if (amenity.codeType === 'options' && amenity.options) {

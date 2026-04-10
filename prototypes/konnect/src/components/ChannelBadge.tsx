@@ -1,4 +1,5 @@
 import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 import { Channel } from '../types';
 import { colors } from '../theme';
 
@@ -14,9 +15,9 @@ const channelLabels: Record<Channel, string> = {
   Expedia: 'Expedia',
 };
 
-export default function ChannelBadge({ channel }: { channel: Channel }) {
+export default function ChannelBadge({ channel, fieldName }: { channel: Channel; fieldName?: string }) {
   const c = channelColors[channel];
-  return (
+  const chip = (
     <Chip
       label={channelLabels[channel]}
       size="small"
@@ -27,7 +28,19 @@ export default function ChannelBadge({ channel }: { channel: Channel }) {
         fontSize: '0.75rem',
         height: 22,
         mr: 0.5,
+        cursor: fieldName ? 'help' : undefined,
       }}
     />
   );
+
+  if (fieldName) {
+    const channelDisplay = channel === 'BDC' ? 'Booking.com' : channel;
+    return (
+      <Tooltip title={`Maps to: ${fieldName} on ${channelDisplay}`} arrow placement="top">
+        {chip}
+      </Tooltip>
+    );
+  }
+
+  return chip;
 }
