@@ -25,6 +25,7 @@ export interface DescriptionEntry {
 export interface AmenityEntry {
   typeCode: string;
   attributes: string[]; // boolean: [], options: ['P'], number: ['2']
+  seededFromPMS?: boolean; // Imported via the "Import from PMS" flow
 }
 
 // Matches channel-management IKasaPropertyChannelSetting shape

@@ -77,6 +77,7 @@ export default function App() {
   const [readinessPanelCollapsed, setReadinessPanelCollapsed] = useState(false);
   const [draftScopes, setDraftScopes] = useState<Set<string>>(new Set());
   const [channelNameOverrides, setChannelNameOverrides] = useState<Record<string, Record<string, string>>>({});
+  const [amenitiesVersion, setAmenitiesVersion] = useState(0);
 
   const property = properties.find((p) => p.propertyId === selectedPropertyId);
   const scopeKey = activeScope === 'property' ? selectedPropertyId : activeScope;
@@ -91,7 +92,8 @@ export default function App() {
 
   const amenityCount = useMemo(() => {
     return (mockPropertyAmenities[selectedPropertyId] || []).length;
-  }, [selectedPropertyId]);
+    // amenitiesVersion is a force-recompute signal fired when amenities mutate.
+  }, [selectedPropertyId, amenitiesVersion]);
 
   const photoCount = useMemo(() => {
     return (mockPhotos[selectedPropertyId] || []).length;
@@ -544,6 +546,7 @@ export default function App() {
                   isDraft={draftScopes.has(`${scopeKey}:amenities`)}
                   onCascade={(rtIds) => handleCascade(rtIds, 'amenities')}
                   onClearDraft={() => handleClearDraft(scopeKey, 'amenities')}
+                  onAmenitiesChange={() => setAmenitiesVersion((v) => v + 1)}
                 />
               )}
               {activeSection === 'photos' && (
@@ -563,6 +566,7 @@ export default function App() {
               property={property}
               collapsed={readinessPanelCollapsed}
               draftScopes={draftScopes}
+              amenitiesVersion={amenitiesVersion}
               onToggle={() => setReadinessPanelCollapsed((v) => !v)}
               onNavigate={(scope, section) => {
                 if (scope === 'property') {

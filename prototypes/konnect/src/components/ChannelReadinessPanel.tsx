@@ -339,6 +339,13 @@ interface Props {
   property: Property;
   collapsed: boolean;
   draftScopes?: Set<string>;
+  /**
+   * Force-recompute signal bumped by the parent whenever amenities mutate
+   * (save, import from PMS, cascade). The panel otherwise only re-memoizes
+   * on property/draftScopes changes, so it wouldn't catch in-place writes
+   * to `mockPropertyAmenities`.
+   */
+  amenitiesVersion?: number;
   onToggle: () => void;
   onNavigate: (scope: 'property' | string, section: string) => void;
 }
@@ -347,8 +354,12 @@ const PANEL_WIDTH = 280;
 
 export { PANEL_WIDTH };
 
-export default function ChannelReadinessPanel({ property, collapsed, draftScopes, onToggle, onNavigate }: Props) {
-  const { groups, completed, total } = useMemo(() => buildChecklist(property, draftScopes), [property, draftScopes]);
+export default function ChannelReadinessPanel({ property, collapsed, draftScopes, amenitiesVersion, onToggle, onNavigate }: Props) {
+  const { groups, completed, total } = useMemo(
+    () => buildChecklist(property, draftScopes),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [property, draftScopes, amenitiesVersion],
+  );
   const pct = total > 0 ? (completed / total) * 100 : 0;
   const allRequired = groups
     .flatMap((g) => g.items)

@@ -16,15 +16,26 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SaveIcon from '@mui/icons-material/Save';
 import SyncIcon from '@mui/icons-material/Sync';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import SyncConfirmDialog from '../components/SyncConfirmDialog';
 import CascadeDialog from '../components/CascadeDialog';
+import ImportFromPmsDialog from '../components/ImportFromPmsDialog';
 import { amenityTypes, AMENITY_CATEGORIES, AmenityType, amenityCategoryMap } from '../data/amenityTypes';
 import { mockPropertyAmenities, mockSyncStatus } from '../data/mockData';
+import {
+  CURRENT_IMPORT_DATE,
+  CURRENT_IMPORT_USER,
+  formatImportDate,
+  hasPmsData,
+  mockPmsImportHistory,
+  ProposedImport,
+} from '../data/pmsMapping';
 import { RoomType } from '../types';
 import { colors } from '../theme';
 
@@ -36,11 +47,13 @@ interface Props {
   isDraft?: boolean;
   onCascade?: (roomTypeIds: string[]) => void;
   onClearDraft?: () => void;
+  onAmenitiesChange?: () => void;
 }
 
 interface AmenityState {
   enabled: boolean;
   attributes: string[];
+  seededFromPMS?: boolean;
 }
 
 export default function AmenitiesTab({
@@ -51,21 +64,31 @@ export default function AmenitiesTab({
   isDraft,
   onCascade,
   onClearDraft,
+  onAmenitiesChange,
 }: Props) {
   const [amenityState, setAmenityState] = useState<Record<string, AmenityState>>(() => {
     const state: Record<string, AmenityState> = {};
     const scopeAmenities = mockPropertyAmenities[scopeKey] || [];
-    const enabledMap = new Map(scopeAmenities.map((a) => [a.typeCode, a.attributes]));
+    const enabledMap = new Map(
+      scopeAmenities.map((a) => [a.typeCode, { attrs: a.attributes, seededFromPMS: a.seededFromPMS }]),
+    );
 
     amenityTypes.forEach((at) => {
-      const attrs = enabledMap.get(at.code);
+      const entry = enabledMap.get(at.code);
       state[at.code] =
-        attrs !== undefined
-          ? { enabled: true, attributes: [...attrs] }
+        entry !== undefined
+          ? { enabled: true, attributes: [...entry.attrs], seededFromPMS: entry.seededFromPMS }
           : { enabled: false, attributes: [] };
     });
     return state;
   });
+
+  // Import from PMS — dialog + history (property scope only)
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importSnackOpen, setImportSnackOpen] = useState(false);
+  const [importSnackMessage, setImportSnackMessage] = useState('');
+  const [lastImport, setLastImport] = useState(() => mockPmsImportHistory[scopeKey] ?? null);
+  const pmsAvailable = hasPmsData(propertyId);
 
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [savedPendingSync, setSavedPendingSync] = useState(false);
@@ -122,14 +145,63 @@ export default function AmenitiesTab({
     // Persist to mock data
     const enabledEntries = Object.entries(amenityState)
       .filter(([, s]) => s.enabled)
-      .map(([code, s]) => ({ typeCode: code, attributes: s.attributes }));
+      .map(([code, s]) => ({
+        typeCode: code,
+        attributes: s.attributes,
+        ...(s.seededFromPMS ? { seededFromPMS: true as const } : {}),
+      }));
     mockPropertyAmenities[scopeKey] = enabledEntries;
     setHasUnsavedChanges(false);
     setSavedPendingSync(true);
     if (isDraft && onClearDraft) {
       onClearDraft();
     }
+    onAmenitiesChange?.();
   };
+
+  const handleImportConfirm = (selected: ProposedImport[]) => {
+    setAmenityState((prev) => {
+      const next = { ...prev };
+      for (const { mapping } of selected) {
+        next[mapping.nextPaxCode] = {
+          enabled: true,
+          attributes: mapping.attributeCode ? [mapping.attributeCode] : [],
+          seededFromPMS: true,
+        };
+      }
+      // Write through to the mock store so the Channel Readiness panel and
+      // any later navigation-and-return see the freshly seeded amenities.
+      const enabledEntries = Object.entries(next)
+        .filter(([, s]) => s.enabled)
+        .map(([code, s]) => ({
+          typeCode: code,
+          attributes: s.attributes,
+          ...(s.seededFromPMS ? { seededFromPMS: true as const } : {}),
+        }));
+      mockPropertyAmenities[scopeKey] = enabledEntries;
+      return next;
+    });
+
+    // Update the "Last imported from PMS: …" line.
+    const newHistory = { importedAt: CURRENT_IMPORT_DATE, importedBy: CURRENT_IMPORT_USER };
+    mockPmsImportHistory[scopeKey] = newHistory;
+    setLastImport(newHistory);
+
+    setImportDialogOpen(false);
+    setImportSnackMessage(
+      `${selected.length} amenit${selected.length === 1 ? 'y' : 'ies'} imported from Portfolio Manager`,
+    );
+    setImportSnackOpen(true);
+    onAmenitiesChange?.();
+  };
+
+  const currentlyEnabledCodes = useMemo(() => {
+    const s = new Set<string>();
+    for (const [code, state] of Object.entries(amenityState)) {
+      if (state.enabled) s.add(code);
+    }
+    return s;
+  }, [amenityState]);
 
   const handleSync = () => {
     setSyncDialogOpen(false);
@@ -191,6 +263,74 @@ export default function AmenitiesTab({
             </Typography>
           </Box>
         </Alert>
+      )}
+
+      {/* Import from PMS — property scope only */}
+      {isPropertyScope && (
+        <Card
+          sx={{
+            mb: 2,
+            bgcolor: colors.neutral[50],
+            border: `1px solid ${colors.neutral[200]}`,
+          }}
+        >
+          <CardContent sx={{ py: 1.75, '&:last-child': { pb: 1.75 } }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 2,
+                flexWrap: 'wrap',
+              }}
+            >
+              <Box sx={{ minWidth: 0 }}>
+                <Typography variant="subtitle2" sx={{ color: colors.neutral[700], mb: 0.25 }}>
+                  Pre-populate from Portfolio Manager
+                </Typography>
+                <Typography variant="caption" sx={{ color: colors.neutral[500] }}>
+                  Import amenities already on file in Portfolio Manager Service for this property.
+                </Typography>
+                {lastImport && (
+                  <Typography
+                    variant="caption"
+                    sx={{ display: 'block', mt: 0.5, color: colors.neutral[500] }}
+                  >
+                    Last imported from PMS:{' '}
+                    <Box component="span" sx={{ fontWeight: 600, color: colors.neutral[700] }}>
+                      {formatImportDate(lastImport.importedAt)}
+                    </Box>{' '}
+                    by{' '}
+                    <Box component="span" sx={{ fontWeight: 600, color: colors.neutral[700] }}>
+                      {lastImport.importedBy}
+                    </Box>
+                  </Typography>
+                )}
+              </Box>
+              <Tooltip
+                title={
+                  pmsAvailable
+                    ? ''
+                    : 'No amenities configured in Portfolio Manager for this property'
+                }
+                arrow
+                placement="top"
+              >
+                <span>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<CloudDownloadIcon />}
+                    onClick={() => setImportDialogOpen(true)}
+                    disabled={!pmsAvailable}
+                  >
+                    Import from PMS
+                  </Button>
+                </span>
+              </Tooltip>
+            </Box>
+          </CardContent>
+        </Card>
       )}
 
       {/* Summary + search bar */}
@@ -364,7 +504,7 @@ export default function AmenitiesTab({
                       size="small"
                     />
                     <Box sx={{ flex: 1, ml: 1, minWidth: 0 }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flexWrap: 'wrap' }}>
                         <Typography
                           variant="body2"
                           sx={{ fontWeight: state.enabled ? 500 : 400 }}
@@ -377,6 +517,22 @@ export default function AmenitiesTab({
                         >
                           {amenity.code}
                         </Typography>
+                        {state.enabled && state.seededFromPMS && (
+                          <Tooltip title="Imported from Portfolio Manager Service" arrow>
+                            <Chip
+                              label="Seeded from PMS"
+                              size="small"
+                              sx={{
+                                bgcolor: colors.purple[100],
+                                color: colors.purple[300],
+                                fontSize: '0.625rem',
+                                fontWeight: 700,
+                                height: 18,
+                                '& .MuiChip-label': { px: 0.75 },
+                              }}
+                            />
+                          </Tooltip>
+                        )}
                       </Box>
                     </Box>
 
@@ -433,6 +589,21 @@ export default function AmenitiesTab({
             autoHideDuration={4000}
             onClose={() => setCascadeSnackOpen(false)}
             message="Amenities applied to room types as drafts. Review each room type to confirm."
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          />
+
+          <ImportFromPmsDialog
+            open={importDialogOpen}
+            propertyId={propertyId}
+            currentlyEnabledCodes={currentlyEnabledCodes}
+            onClose={() => setImportDialogOpen(false)}
+            onConfirm={handleImportConfirm}
+          />
+          <Snackbar
+            open={importSnackOpen}
+            autoHideDuration={4000}
+            onClose={() => setImportSnackOpen(false)}
+            message={importSnackMessage}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           />
         </>

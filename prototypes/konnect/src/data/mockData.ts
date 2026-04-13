@@ -746,7 +746,8 @@ export const mockPropertyAmenities: Record<string, AmenityEntry[]> = {
     { typeCode: 'W01', attributes: [] },
     { typeCode: 'D08', attributes: [] },
   ],
-  // — Kasa Embarcadero San Francisco (prop-999) — fully loaded —
+  // — Kasa Embarcadero San Francisco (prop-999) — fully loaded, incl. every
+  // PMS-mappable amenity so the Import from PMS preview shows the empty state.
   'prop-999': [
     { typeCode: 'B02', attributes: ['1'] },
     { typeCode: 'B17', attributes: ['1'] },
@@ -769,10 +770,21 @@ export const mockPropertyAmenities: Record<string, AmenityEntry[]> = {
     { typeCode: 'W07', attributes: ['Y'] },
     { typeCode: 'A22', attributes: ['Y'] },
     { typeCode: 'P06', attributes: ['42'] },
-    { typeCode: 'W01', attributes: [] },
+    { typeCode: 'W01', attributes: [], seededFromPMS: true }, // Laundry
     { typeCode: 'E01', attributes: [] },
     { typeCode: 'C66', attributes: [] },
     { typeCode: 'D08', attributes: [] },
+    // PMS-seeded amenities — make the Import from PMS modal show empty state
+    { typeCode: 'P05', attributes: ['C'], seededFromPMS: true }, // Outdoor swimming pool
+    { typeCode: 'J01', attributes: ['Y'], seededFromPMS: true }, // Jacuzzi
+    { typeCode: 'F12', attributes: [], seededFromPMS: true }, // Fitness/Gym
+    { typeCode: 'G01', attributes: ['G'], seededFromPMS: true }, // Parking — Garage
+    { typeCode: 'B09', attributes: ['Y'], seededFromPMS: true }, // Barbecue
+    { typeCode: 'P17', attributes: [], seededFromPMS: true }, // Patio
+    { typeCode: 'T02', attributes: [], seededFromPMS: true }, // Terrace (rooftop)
+    { typeCode: 'P02', attributes: ['Y'], seededFromPMS: true }, // Pet-friendly
+    { typeCode: 'B25', attributes: [], seededFromPMS: true }, // Business center
+    { typeCode: 'A62', attributes: [], seededFromPMS: true }, // Bicycles parking
   ],
   'rt-010': [
     { typeCode: 'B17', attributes: ['1'] },

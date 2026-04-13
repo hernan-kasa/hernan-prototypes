@@ -1,8 +1,9 @@
 # Konnect V1 — UI Prototype Brief
 
-**Purpose:** This document is the single reference for building a Konnect V1 UI prototype. It contains only what's needed to build screens — no infrastructure, rollout plans, or backend architecture.
+**Purpose:** UI build instructions for the Konnect V1 prototype — screens, interactions, mock data. Does NOT contain architecture decisions, resolved open questions, or system constraints.
 
-**How to use:** Feed this document to Claude Code alongside the prompt at the bottom. The full PRD (KNT-001 v4) is available for background context but should NOT be the primary input.
+**Full product spec (source of truth for decisions):** `/Users/Kasa/Claude/product-documentation/konnect-content-management/knt-001-v8-full-spec-2026-04-10.md`
+If a question arises about how something should work (inheritance model, sync semantics, data model, channel constraints), check the full spec before making assumptions. This prototype spec covers what to build; the full spec covers why and how it works.
 
 ---
 
@@ -18,7 +19,8 @@ A content management UI inside Kontrol that lets Kasa's Distribution team author
 - See sync status per property
 
 **NOT in V1 (do not build):**
-- Policies, photos, fees, taxes
+- Policies
+- Photo upload (photos are read-only from Contentful; ordering is in scope)
 - Multi-language authoring workflow (data model supports it, UI defers it)
 - Batch operations across multiple properties
 - Automated sync on save (V1 is operator-triggered)
@@ -44,18 +46,55 @@ Kontrol uses:
 
 ### Konnect navigation model
 
-Within a Property detail view, Konnect adds a new tab or section (alongside existing property tabs). Inside Konnect, content is organized as sub-tabs:
+Within a Property detail view, Konnect adds a new section (alongside existing property tabs). The left sidebar uses a two-level collapsible tree:
 
 ```
-Property Detail View
-  └── [Existing Kontrol tabs: Overview, Rates, etc.]
-  └── Content (Konnect)
-        ├── Descriptions
-        ├── Amenities
-        └── Sync Status
+[Property Selector Dropdown]
+
+Overview                          ← property-level
+Descriptions            [6/22]
+Amenities               [42]
+Photos                  [12]
+Fees                    [ref]
+Taxes                   [ref]
+Sync Status
+
+─────────────────────────────
+ROOM TYPES
+
+▸ Studio Suite                    ← collapsible, shows summary card when collapsed
+    Overview
+    Descriptions
+    Amenities
+    Photos
+    Fees
+
+▸ One Bedroom King
+    ...
 ```
 
-**Scope toggle:** Each content section must support both property-level and room-type-level content. The UI needs a clear way to switch between "Property descriptions" and "Room Type X descriptions." Options: a dropdown selector at the top of the content section, or a nested nav where room types appear as sub-items under each content type.
+**Scope is handled by the sidebar** — no scope toggle or tab bar at the top of content pages. Property-level sections are flat at the top. Room types are collapsible groups below a divider. Room types expose a subset of sections: Overview, Descriptions, Amenities, Photos, Fees. Taxes and Sync Status are property-level only.
+
+**Room type summary cards** (shown when collapsed): display internal title, nickname (if different), setup info (e.g., "1BR King"), max occupancy, and channel listing link badges (Airbnb with listing ID, BDC, Expedia). Clicking the card expands the room type.
+
+**Channel ordering:** Channels are displayed in the order Airbnb → Booking.com → Expedia throughout the entire interface.
+
+### Channel Readiness panel
+
+A persistent right-rail panel (280px, collapsible to 40px) visible on all Konnect pages. Tracks content completion with a hierarchical checklist grouped by:
+
+1. **Property-Level Content** — Descriptions, Amenities, Photos, Fees, Taxes
+2. **Room Type: [name]** (one group per room type) — Descriptions, Amenities, Photos, Fees
+3. **Channel Sync** — one row per channel showing enabled/paused/not-enabled
+
+**Status criteria:**
+- Descriptions: ✅ all 9 core types filled, ⚠️ core filled but optional missing, ❌ core types missing
+- Amenities: ✅ property ≥20 / room type ≥10, ⚠️ some enabled but below threshold, ❌ none
+- Photos: ✅ 5+ photos with hero (priority 0) set, ⚠️ photos exist but no hero, ❌ no photos
+- Fees/Taxes: always ✅ (reference only, configured elsewhere)
+- Draft content (from cascade): always ⚠️ until reviewed and saved
+
+**Bottom action:** "Enable Content Sync" button, disabled until all required sections pass (no ❌ items).
 
 ---
 
@@ -142,6 +181,8 @@ Types with no active channel should be visually de-emphasized (muted/collapsed) 
 
 **Key interaction: locked amenity indicator.** Some amenities were imported via BDC reverse content pull and are "locked" in the NextPax UI. Konnect should show a visual indicator (e.g., lock icon with tooltip: "Imported from PMS — will be overwritten on next sync") for amenities that exist in NextPax but haven't been confirmed in Konnect.
 
+**Key interaction: Import from PMS (property-scope only).** Above the category groups on the property-level amenity editor, an "Import from PMS" outlined button opens a preview dialog of amenities already configured in Portfolio Manager Service but not yet toggled in Konnect. The dialog groups proposed imports by Konnect category, shows per-row confidence (High/Medium), source PMS FacilityType, and a non-blocking policy-verification note for parking/pet rows. Operator unchecks any rows that shouldn't seed, confirms, and the toggles flip on with a subtle "Seeded from PMS" origin chip. A "Last imported from PMS: {date} by {user}" line appears under the button after the first import and on re-open. Empty state ("All mappable PMS amenities are already configured.") appears when every mapped PMS amenity is already present. Imports participate in the existing `Save & Apply to Room Types` cascade identically to manually authored amenities. Implementation: see `src/data/pmsMapping.ts` for the mapping + mock data, `src/components/ImportFromPmsDialog.tsx` for the preview dialog. Product context: `product-documentation/konnect-content-management/knt-001-amenity-pms-seed-spec.md`.
+
 ### 3.3 Sync Status Screen
 
 **Purpose:** Show the sync state for this property's content across channels.
@@ -163,6 +204,27 @@ Types with no active channel should be visually de-emphasized (muted/collapsed) 
 - "Expedia content sync has never been enabled for this property."
 - "Pet fees must be added manually in NextPax channel-specific settings."
 - "Airbnb 'Guest Access' and 'Getting Around' fields must be managed directly on Airbnb."
+
+### 3.4 Photos Screen
+
+**Purpose:** Read-only gallery showing photos sourced from Contentful, with a drag-to-reorder interface for setting display priority across channels. Photos cannot be uploaded or edited in Konnect — this is an ordering and review interface.
+
+**Why it exists:** Distribution needs to see photos in context alongside descriptions and amenities. Loadies (operations team) don't have Contentful access. Photo ordering is a channel distribution concern, not a Contentful concern.
+
+**Layout:**
+
+| Element | Details |
+|---------|---------|
+| Info banner | "Photos are managed in Contentful. Drag to reorder for channel distribution." with "Open in Contentful" link |
+| Photo count | "24 photos" |
+| View toggle | Grid view (default, responsive 3-4 columns) / List view (table with Priority, Thumbnail, Type, Caption, Last Updated) |
+| Photo card | Thumbnail, image type badge (Exterior, Bedroom, Kitchen, etc.), priority number, caption, "Source: Contentful" indicator |
+| Hero photo | Priority 0, distinct visual treatment (gold border, "Hero" badge with star icon, slightly taller) |
+| Drag-to-reorder | Drag cards to change order. Priority numbers auto-recalculate. Drag handle visible on each card. |
+
+**Save behavior:** Reordering puts the page in a dirty state. "Save Order" persists the new priority sequence. After save, the standard sync banner appears.
+
+**Scope:** Available at both property level and room-type level. Each scope has its own independent photo set and ordering.
 
 ---
 
@@ -224,9 +286,23 @@ Consistent badge pattern across all screens — each channel gets a visually dis
 
 New properties with no content yet should show a clear empty state: "No descriptions authored yet. Start with the core types used by all channels." with a visual indicator pointing to `house`, `remarks`, `fine-print`, `short-introduction`.
 
-### Property vs. Room Type Toggle
+### Property vs. Room Type Scope
 
-A selector at the top of the content area that switches between property-level and room-type-level content. Room types are listed by name (e.g., "Studio Suite", "1BR King"). Each room type has its own independent set of descriptions and amenities.
+Scope is handled by the sidebar tree navigation (see Section 2). Each room type has its own independent set of descriptions, amenities, and photos.
+
+### Property-to-Room-Type Content Cascade
+
+On property-level Descriptions and Amenities pages, a secondary action "Save & Apply to Room Types" copies property content to all room types as a draft baseline. A confirmation dialog lists all room types with checkboxes — room types with existing content show an overwrite warning and can be unchecked to skip.
+
+**Draft state:** After cascade, room-type content enters a "draft" state shown with a yellow "Draft — inherited from property, review and save to confirm" banner. The draft indicator clears when a user explicitly saves at the room-type level. The Channel Readiness panel shows draft items as ⚠️ (needs review), not ✅.
+
+### Channel-Specific Room Type Name Overrides
+
+On each room type's Overview page, optional text fields allow overriding the room type display name per channel (Airbnb, Booking.com, Expedia). If left empty, the default Kontrol room type name is used. Character limit indicators shown for channels with constraints (BDC ~100 chars, Airbnb ~50 chars — verify against API docs).
+
+### Channel Field Name Tooltips
+
+On the Descriptions page, hovering over a channel badge shows the actual field name on that channel. Example: hovering over the BDC badge on the `house` description type shows "Maps to: Property Description on Booking.com". Mappings are maintained in `channelFieldNames` in `descriptionTypes.ts`.
 
 ---
 
@@ -316,16 +392,39 @@ A previous Konnect design from 2023 used a standalone platform with its own nav 
 }
 ```
 
-### Property with room types (for the property/room-type toggle)
+### Property with room types
 ```json
 {
   "propertyId": "prop-123",
   "propertyName": "Kasa 2nd Street Austin",
   "roomTypes": [
-    { "id": "rt-001", "name": "Studio Suite" },
-    { "id": "rt-002", "name": "1BR King" },
-    { "id": "rt-003", "name": "2BR Suite" }
+    {
+      "id": "rt-001",
+      "name": "Studio Suite",
+      "internalTitle": "Studio Apartment A",
+      "nickname": null,
+      "setupInfo": "Studio",
+      "maxOccupancy": 2,
+      "channelLinks": [
+        { "channel": "Airbnb", "url": "...", "listingId": "ABB-8847231" },
+        { "channel": "BDC", "url": "..." },
+        { "channel": "Expedia", "url": "..." }
+      ]
+    }
   ]
+}
+```
+
+### Photo entry (sourced from Contentful, ordering managed in Konnect)
+```json
+{
+  "id": "ph-1",
+  "imageType": "exterior",
+  "imageTypeLabel": "Exterior",
+  "caption": "Building facade from 2nd Street",
+  "priority": 0,
+  "lastUpdated": "2026-03-01T10:00:00Z",
+  "contentfulId": "ctfl-a1b2c3"
 }
 ```
 
