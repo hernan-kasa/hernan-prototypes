@@ -6,6 +6,14 @@
 - Gives product direction in plain language — never touches code
 - Validates work visually (screenshots, running the app), not by reading code
 
+## Working Style
+
+- When asked to "spin up" or "start" a dev server, run the command directly with Bash — don't tell Hernan to do it manually
+- When asked for output, exports, or documentation, always save to a file — don't print a summary in chat unless explicitly asked for one
+- Use existing client libraries and patterns found in the codebase — don't use direct REST calls unless no client exists
+- Feature requests come as: **[what I want]** + **[where it appears]** + **[how it should behave]**
+- If two reasonable options exist, pick one and flag it — don't block on a decision I didn't ask to make
+
 ## Session Protocol
 
 ### Start of Session
@@ -14,12 +22,11 @@
 3. Wait for the Session Brief: what exists, desired end state, spec reference, out of scope
 
 ### During Session
-- Feature requests come as: **[what I want]** + **[where it appears]** + **[how it should behave]**
 - Log every assumption where the spec is ambiguous
-- If two reasonable options exist, pick one and flag it
 - If a request is ambiguous, ask **one** clarifying question before building
 
 ### End of Session — Produce a Closeout
+Save a closeout markdown file to the prototype's `documentation/closeouts/` folder with:
 - **Assumption Log** — decisions made without explicit spec guidance
 - **What Was Built** — summary of completed work
 - **What's Broken or Incomplete** — known issues or unfinished items

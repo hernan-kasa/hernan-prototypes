@@ -355,9 +355,15 @@ A previous Konnect design from 2023 used a standalone platform with its own nav 
   "category": "Internet & Technology",
   "attributes": ["Y"],
   "channels": ["BDC", "Airbnb", "Expedia"],
-  "isLockedImport": false
+  "isLockedImport": false,
+  "seededFromPMS": false
 }
 ```
+
+`seededFromPMS` (optional) — set to `true` when the entry was populated by the
+"Import from PMS" flow on the property-level amenity editor. Drives the
+"Seeded from PMS" origin chip in the editor. Survives save/edit; stripped on
+cascade to room types (room-type entries are authored independently).
 
 ### Sync status
 ```json

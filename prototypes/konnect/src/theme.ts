@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-// Kontrol color tokens
+// Kontrol production color tokens (from kontrol-ui base-theme)
 const neutral = {
   50: '#FFFFFF',
   100: '#F1F5FB',

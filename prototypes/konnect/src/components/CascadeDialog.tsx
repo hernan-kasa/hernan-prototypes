@@ -87,7 +87,7 @@ export default function CascadeDialog({ open, contentType, roomTypes, onConfirm,
                   />
                 }
                 label={
-                  <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                  <Typography variant="body2" sx={{ fontWeight: 700 }}>
                     {rt.name}
                   </Typography>
                 }

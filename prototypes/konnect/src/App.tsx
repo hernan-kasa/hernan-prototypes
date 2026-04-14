@@ -178,7 +178,7 @@ export default function App() {
                 sx={{
                   width: 28,
                   height: 28,
-                  borderRadius: '8px',
+                  borderRadius: '12px',
                   bgcolor: colors.blue[400],
                   display: 'flex',
                   alignItems: 'center',
@@ -394,7 +394,7 @@ export default function App() {
                     <ListItemButton
                       onClick={() => toggleRoomType(rt.id)}
                       sx={{
-                        borderRadius: '8px',
+                        borderRadius: '12px',
                         mb: 0.25,
                         py: 0.75,
                         px: 1.5,
@@ -594,7 +594,7 @@ function RoomTypeSummaryCard({ rt }: { rt: RoomType }) {
         px: 1.5,
         py: 1,
         bgcolor: colors.neutral[100],
-        borderRadius: '8px',
+        borderRadius: '12px',
         border: `1px solid ${colors.neutral[200]}`,
       }}
     >
@@ -646,7 +646,7 @@ function RoomTypeSummaryCard({ rt }: { rt: RoomType }) {
                     justifyContent: 'center',
                     bgcolor: c.bg,
                     color: c.text,
-                    borderRadius: '4px',
+                    borderRadius: '12px',
                     width: 18,
                     height: 18,
                     fontSize: '0.625rem',
@@ -737,9 +737,7 @@ function RoomTypeOverview({
               const label =
                 link.channel === 'BDC'
                   ? 'Booking.com'
-                  : link.channel === 'Airbnb' && link.listingId
-                    ? `Airbnb (${link.listingId})`
-                    : link.channel;
+                  : link.channel;
               return (
                 <Link
                   key={link.channel}
@@ -937,7 +935,7 @@ function RefBadge() {
 // ─── Style helpers ───────────────────────────────────────────────────────────
 
 const navItemSx = (selected: boolean) => ({
-  borderRadius: '8px',
+  borderRadius: '12px',
   mb: 0.25,
   py: 0.75,
   px: 1.5,
@@ -948,7 +946,7 @@ const navItemSx = (selected: boolean) => ({
 });
 
 const subNavItemSx = (selected: boolean) => ({
-  borderRadius: '8px',
+  borderRadius: '12px',
   mb: 0.25,
   py: 0.5,
   pl: 4.5,

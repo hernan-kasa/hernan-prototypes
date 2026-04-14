@@ -125,19 +125,8 @@ export default function SyncStatusTab({ propertyId }: Props) {
 
   return (
     <Box>
-      {/* Warning banners */}
-      {warnings.map((w, i) => (
-        <Alert
-          key={i}
-          severity={w.includes('disabled') || w.includes('never been enabled') ? 'warning' : 'info'}
-          sx={{ mb: 1.5 }}
-        >
-          {w}
-        </Alert>
-      ))}
-
       {/* Channel status cards */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2, mb: 4, mt: 3 }}>
+      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 2, mb: 2 }}>
         {channels.map((ch) => (
           <Card key={ch.channelId}>
             <CardContent>
@@ -210,11 +199,11 @@ export default function SyncStatusTab({ propertyId }: Props) {
         Recent Sync Log
       </Typography>
       {syncLog.length === 0 ? (
-        <Typography variant="body2" sx={{ color: colors.neutral[500] }}>
+        <Typography variant="body2" sx={{ color: colors.neutral[500], mb: 4 }}>
           No sync events recorded for this property.
         </Typography>
       ) : (
-        <TableContainer>
+        <TableContainer sx={{ mb: 4 }}>
           <Table size="small">
             <TableHead>
               <TableRow>
@@ -269,6 +258,18 @@ export default function SyncStatusTab({ propertyId }: Props) {
           </Table>
         </TableContainer>
       )}
+
+      {/* Notes & Warnings */}
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>Notes &amp; Warnings</Typography>
+      {warnings.map((w, i) => (
+        <Alert
+          key={i}
+          severity={w.includes('disabled') || w.includes('never been enabled') ? 'warning' : 'info'}
+          sx={{ mb: 1.5 }}
+        >
+          {w}
+        </Alert>
+      ))}
 
       <SyncConfirmDialog
         open={confirmOpen}

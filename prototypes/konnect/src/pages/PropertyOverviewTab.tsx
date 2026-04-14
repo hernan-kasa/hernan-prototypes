@@ -256,27 +256,6 @@ export default function PropertyOverviewTab({ propertyId, onNavigate }: Props) {
         </Card>
       </Box>
 
-      {/* Action items */}
-      {stats.actions.length > 0 && (
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="subtitle1" sx={{ mb: 1.5 }}>Needs Attention</Typography>
-          {stats.actions.map((action, i) => (
-            <Alert
-              key={i}
-              severity={action.severity}
-              sx={{
-                mb: 1,
-                cursor: 'pointer',
-                '&:hover': { opacity: 0.85 },
-              }}
-              onClick={() => onNavigate(action.nav, action.scope)}
-            >
-              {action.label}
-            </Alert>
-          ))}
-        </Box>
-      )}
-
       {/* Room type coverage */}
       <Typography variant="subtitle1" sx={{ mb: 1.5 }}>Room Type Coverage</Typography>
       <TableContainer>
@@ -300,7 +279,7 @@ export default function PropertyOverviewTab({ propertyId, onNavigate }: Props) {
                   onClick={() => onNavigate('descriptions', rt.id)}
                 >
                   <TableCell>
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>{rt.name}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 700 }}>{rt.name}</Typography>
                   </TableCell>
                   <TableCell align="center">
                     <Chip
@@ -351,6 +330,27 @@ export default function PropertyOverviewTab({ propertyId, onNavigate }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Action items */}
+      {stats.actions.length > 0 && (
+        <Box sx={{ mt: 4 }}>
+          <Typography variant="subtitle1" sx={{ mb: 1.5 }}>Needs Attention</Typography>
+          {stats.actions.map((action, i) => (
+            <Alert
+              key={i}
+              severity={action.severity}
+              sx={{
+                mb: 1,
+                cursor: 'pointer',
+                '&:hover': { opacity: 0.85 },
+              }}
+              onClick={() => onNavigate(action.nav, action.scope)}
+            >
+              {action.label}
+            </Alert>
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }
