@@ -167,11 +167,11 @@ export default function SyncStatusTab({ propertyId }: Props) {
                   <Typography variant="caption">{formatDate(ch.lastSyncAt)}</Typography>
                 </Box>
                 {ch.disableReason && (
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <Typography variant="caption" sx={{ color: colors.neutral[500] }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+                    <Typography variant="caption" sx={{ color: colors.neutral[500], flexShrink: 0 }}>
                       Reason
                     </Typography>
-                    <Typography variant="caption" sx={{ color: colors.orange[400] }}>
+                    <Typography variant="caption" sx={{ color: colors.orange[400], textAlign: 'right' }}>
                       {ch.disableReason}
                     </Typography>
                   </Box>
